@@ -121,4 +121,21 @@ refactor/short-description
 
 ## Deployment
 
-The app will be deployed with GitHub Pages once the production workflow is ready.
+The app is prepared to deploy with GitHub Pages through GitHub Actions.
+
+### GitHub Pages setup
+
+1. Open repository settings.
+2. Go to Pages.
+3. Set source to GitHub Actions.
+4. Add repository secrets:
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_PUBLISHABLE_KEY`
+5. Merge validated production changes into `main`.
+6. The deploy workflow will build the app and publish the `dist` folder.
+
+The Vite base path is configured for:
+
+```txt
+/NativasApp/
+```
