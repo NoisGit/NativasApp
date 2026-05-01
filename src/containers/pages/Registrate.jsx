@@ -1,73 +1,36 @@
-import React, { useState } from 'react'
-import { FormularioRegistro } from '../../components/FormularioRegistro'
-import registerImg from '../../assets/Roller_Form.png'
-import { NavBar } from '../../components/NavBar'
-import { Mensaje } from '../../components/Mensaje'
-import { Layout } from '../../hoc/layout/Layout'
-import { db, auth } from '../../api/firebase'
-import { createUserWithEmailAndPassword } from 'firebase/auth'
-import { addDoc, collection } from 'firebase/firestore'
 import { useNavigate } from 'react-router-dom'
+import { Badge, Button, Card, Container, Section, SectionHeading } from '../../components/ui'
+import { Footer } from '../../components/Footer'
 
 export function Registrate () {
-  const [successReg, setSuccessReg] = useState(false)
   const navigate = useNavigate()
 
-  const agregarUsuario = async (usuario) => {
-    try {
-      const docRef = await addDoc(collection(db, 'users'), usuario)
-      console.log('Document written with ID: ', docRef.id)
-    } catch (e) {
-      console.error('Error adding document: ', e)
-    }
-  }
-
-  const handleRegistro = async ({ nombre, apellido, correo, password, terminos }) => {
-    try {
-      const userCredential = await createUserWithEmailAndPassword(auth, correo, password)
-      const user = userCredential.user
-
-      if (user) {
-        const newUser = {
-          nombre,
-          apellido,
-          correo,
-          terminos
-        }
-
-        await agregarUsuario(newUser)
-        console.log('Usuario agregado')
-        setSuccessReg(true)
-        navigate('/login')
-      }
-    } catch (error) {
-      const errorCode = error.code
-      const errorMessage = error.message
-      console.log(errorCode)
-      console.log(errorMessage)
-    }
-  }
-
   return (
-    <Layout>
-      <div className='h-screen overflow-hidden'>
-        <NavBar />
-        <div className='flex h-auto w-full overflow-hidden'>
-          <picture className='w-2/5 h-full filtro'>
-            <img src={registerImg} alt='Register' className='w-full h-full' />
-          </picture>
-          {/* contenedor del formulario */}
-          <div className='w-3/5 h-full flex justify-center items-center'>
-            {successReg
-              ? (
-                <Mensaje mensaje='Registro exitoso' />
-                )
-              : (
-                <FormularioRegistro handleRegistro={handleRegistro} />
-                )}
+    <main className='min-h-screen bg-nativas-night text-white'>
+      <Section className='relative overflow-hidden'>
+        <div className='absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(102,221,219,0.16),transparent_30%),linear-gradient(135deg,#0D1015_0%,#0A131C_50%,#10131A_100%)]' />
+        <Container className='relative'>
+          <div className='mx-auto max-w-3xl'>
+            <Badge>Registro</Badge>
+            <SectionHeading
+              className='mt-6'
+              title='Registro administrativo pausado.'
+              description='El registro antiguo con Firebase fue retirado para evitar mantener código legacy. Esta sección volverá cuando implementemos Supabase Auth.'
+            />
+
+            <Card className='mt-8 p-6 sm:p-8'>
+              <h2 className='text-2xl font-black text-white'>Flujo en refactor</h2>
+              <p className='mt-4 leading-7 text-nativas-mist'>
+                Por ahora no se crearán cuentas desde esta vista. El admin se rediseñará como una etapa separada, alineada con Supabase y las necesidades reales del proyecto.
+              </p>
+              <div className='mt-8'>
+                <Button onClick={() => navigate('/')}>Volver a la landing</Button>
+              </div>
+            </Card>
           </div>
-        </div>
-      </div>
-    </Layout>
+        </Container>
+      </Section>
+      <Footer />
+    </main>
   )
 }
