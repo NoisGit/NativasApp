@@ -1,3 +1,5 @@
+/* global fetch */
+
 import { useState } from 'react'
 import { Badge, Button, Card, Container, Section, SectionHeading } from './ui'
 
