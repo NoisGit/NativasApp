@@ -16,10 +16,10 @@ export const Footer = () => {
 
         <div className='flex flex-col gap-4 md:items-end'>
           <nav className='flex flex-wrap gap-x-4 gap-y-2 text-sm font-semibold'>
-            <Link to='/?section=about' className='transition hover:text-white'>Equipo</Link>
-            <Link to='/?section=training' className='transition hover:text-white'>Entrenamientos</Link>
-            <Link to='/?section=faq' className='transition hover:text-white'>FAQ</Link>
-            <Link to='/?section=apply' className='transition hover:text-white'>Postulación</Link>
+            <Link to='/' state={{ section: 'about' }} className='transition hover:text-white'>Equipo</Link>
+            <Link to='/' state={{ section: 'training' }} className='transition hover:text-white'>Entrenamientos</Link>
+            <Link to='/' state={{ section: 'faq' }} className='transition hover:text-white'>FAQ</Link>
+            <Link to='/' state={{ section: 'apply' }} className='transition hover:text-white'>Postulación</Link>
           </nav>
 
           <a
