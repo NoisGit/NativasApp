@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { FaInstagram } from 'react-icons/fa'
 
 const instagramUrl = 'https://www.instagram.com/nativas_rollerderby?igsh=MW84Mm5nbm5tN2ZvcA=='
@@ -15,10 +16,10 @@ export const Footer = () => {
 
         <div className='flex flex-col gap-4 md:items-end'>
           <nav className='flex flex-wrap gap-x-4 gap-y-2 text-sm font-semibold'>
-            <a href='/NativasApp/#about' className='transition hover:text-white'>Equipo</a>
-            <a href='/NativasApp/#training' className='transition hover:text-white'>Entrenamientos</a>
-            <a href='/NativasApp/#faq' className='transition hover:text-white'>FAQ</a>
-            <a href='/NativasApp/#apply' className='transition hover:text-white'>Postulación</a>
+            <Link to='/#about' className='transition hover:text-white'>Equipo</Link>
+            <Link to='/#training' className='transition hover:text-white'>Entrenamientos</Link>
+            <Link to='/#faq' className='transition hover:text-white'>FAQ</Link>
+            <Link to='/#apply' className='transition hover:text-white'>Postulación</Link>
           </nav>
 
           <a
