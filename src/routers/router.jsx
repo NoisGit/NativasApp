@@ -9,9 +9,11 @@ import { RecoverPass } from '../containers/pages/RecoverPass.jsx'
 import { SolicitudPage } from '../containers/pages/SolicitudPage.jsx'
 import { ProtectorRuta } from './ProtectedRoute'
 
+const routerBaseName = import.meta.env.BASE_URL
+
 const AppRouter = () => {
   return (
-    <Router>
+    <Router basename={routerBaseName}>
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/login' element={<Login />} />
