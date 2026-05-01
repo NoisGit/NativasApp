@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import { HashRouter as Router, Route, Routes } from 'react-router-dom'
 import { Error404 } from '../containers/errors/Error404'
 import { Home } from '../containers/pages/Home.jsx'
 import { Login } from '../containers/pages/Login.jsx'
@@ -10,11 +10,9 @@ import { SolicitudPage } from '../containers/pages/SolicitudPage.jsx'
 import { ProtectorRuta } from './ProtectedRoute'
 import { ScrollToTop } from './ScrollToTop'
 
-const routerBaseName = import.meta.env.BASE_URL
-
 const AppRouter = () => {
   return (
-    <Router basename={routerBaseName}>
+    <Router>
       <ScrollToTop />
       <Routes>
         <Route path='/' element={<Home />} />
