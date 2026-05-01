@@ -82,6 +82,14 @@ Run lint:
 npm run lint
 ```
 
+## Quality checks
+
+Pull requests to `develop` and `main` run a CI workflow with:
+
+- dependency installation
+- lint
+- production build
+
 ## Branch workflow
 
 - `main`: stable production branch.
