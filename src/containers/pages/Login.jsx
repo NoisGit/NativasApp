@@ -1,65 +1,36 @@
-import { FormularioLogin } from '../../components/FormularioLogin'
-import { Layout } from '../../hoc/layout/Layout'
-import { NavBar } from '../../components/NavBar'
-import loginImg from '../../assets/Roller_Login.png'
-import { Mensaje } from '../../components/Mensaje'
-import { db } from '../../api/firebase'
-import { useAuth } from '../../context/AuthContext'
-import { collection, query, where, getDocs } from 'firebase/firestore'
 import { useNavigate } from 'react-router-dom'
-import { useEffect } from 'react'
+import { Badge, Button, Card, Container, Section, SectionHeading } from '../../components/ui'
+import { Footer } from '../../components/Footer'
 
 export function Login () {
-  const admins = collection(db, 'admins')
   const navigate = useNavigate()
-  const { user, login } = useAuth()
-
-  const handleLogin = async ({ usuario, password }) => {
-    try {
-      await login(usuario, password)
-      const q = query(admins, where('email', '==', usuario))
-      const querySnapshot = await getDocs(q)
-
-      if (!querySnapshot.empty) {
-        // Es un administrador, redirigir a /adm
-        navigate('/adm')
-      } else {
-        // No es un administrador, redirigir a /user
-        navigate('/user')
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  // Redirigir al usuario si la sesión está activa
-  useEffect(() => {
-    if (user) {
-      navigate('/user')
-    }
-  }, [user])
 
   return (
-    <Layout>
-      <div className='h-screen w-full overflow-hidden '>
-        <NavBar />
+    <main className='min-h-screen bg-nativas-night text-white'>
+      <Section className='relative overflow-hidden'>
+        <div className='absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(102,221,219,0.16),transparent_30%),linear-gradient(135deg,#0D1015_0%,#0A131C_50%,#10131A_100%)]' />
+        <Container className='relative'>
+          <div className='mx-auto max-w-3xl'>
+            <Badge>Admin</Badge>
+            <SectionHeading
+              className='mt-6'
+              title='Panel administrativo en preparación.'
+              description='El acceso antiguo con Firebase fue retirado. El próximo paso será implementar autenticación con Supabase para administrar postulaciones y noticias.'
+            />
 
-        <div className='w-full h-screen md:flex'>
-          <picture className='w-3/6 filtro'>
-            <img className='w-full h-full' src={loginImg} alt='' />
-          </picture>
-
-          <div className='md:mt-20 absolute top-[20%] left-[25%] sm:left-[30%] md:relative md:left-2 md:top-4 md:w-2/5'>
-            {user
-              ? (
-                <Mensaje mensaje='Login Correcto' />
-                )
-              : (
-                <FormularioLogin functionSuccess={handleLogin} />
-                )}
+            <Card className='mt-8 p-6 sm:p-8'>
+              <h2 className='text-2xl font-black text-white'>Próxima etapa</h2>
+              <p className='mt-4 leading-7 text-nativas-mist'>
+                Esta sección quedará reservada para el panel privado de Nativas. Por ahora, las postulaciones se gestionarán mediante correo y las noticias se conectarán manualmente desde Supabase.
+              </p>
+              <div className='mt-8'>
+                <Button onClick={() => navigate('/')}>Volver a la landing</Button>
+              </div>
+            </Card>
           </div>
-        </div>
-      </div>
-    </Layout>
+        </Container>
+      </Section>
+      <Footer />
+    </main>
   )
 }
