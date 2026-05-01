@@ -54,9 +54,21 @@ Create a `.env` file using `.env.example` as reference:
 ```env
 VITE_SUPABASE_URL=
 VITE_SUPABASE_PUBLISHABLE_KEY=
+VITE_APPLICATION_FORM_ENDPOINT=
 ```
 
 Do not commit real environment values.
+
+## Application form email flow
+
+The application form is prepared to send submissions through an external form endpoint, such as Formspree.
+
+Recommended setup:
+
+1. Create a form endpoint in the selected provider.
+2. Connect that endpoint to the final recipient email from the project owner.
+3. Add the endpoint locally as `VITE_APPLICATION_FORM_ENDPOINT`.
+4. Add the same value as a GitHub repository secret before deploying.
 
 ## Local setup
 
@@ -130,6 +142,7 @@ The app is prepared to deploy with GitHub Pages through GitHub Actions.
 4. Add repository secrets:
    - `VITE_SUPABASE_URL`
    - `VITE_SUPABASE_PUBLISHABLE_KEY`
+   - `VITE_APPLICATION_FORM_ENDPOINT`
 5. Merge validated production changes into `main`.
 6. The deploy workflow will build the app and publish the `dist` folder.
 
