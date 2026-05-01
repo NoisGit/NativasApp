@@ -8,12 +8,14 @@ import { UserPage } from '../containers/pages/UserPage.jsx'
 import { RecoverPass } from '../containers/pages/RecoverPass.jsx'
 import { SolicitudPage } from '../containers/pages/SolicitudPage.jsx'
 import { ProtectorRuta } from './ProtectedRoute'
+import { ScrollToTop } from './ScrollToTop'
 
 const routerBaseName = import.meta.env.BASE_URL
 
 const AppRouter = () => {
   return (
     <Router basename={routerBaseName}>
+      <ScrollToTop />
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/login' element={<Login />} />
