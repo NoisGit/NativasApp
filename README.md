@@ -15,6 +15,14 @@ Current focus:
 - GitHub Pages deployment.
 - Clean documentation and frontend best practices.
 
+## Live preview
+
+Expected GitHub Pages URL:
+
+```txt
+https://noisgit.github.io/NativasApp/
+```
+
 ## Tech stack
 
 - React
@@ -94,25 +102,8 @@ Pull requests to `develop` and `main` run a CI workflow with:
 
 - `main`: stable production branch.
 - `develop`: integration branch.
-- Feature branches must be created from `develop`.
 - Pull requests must target `develop`.
 - Production changes move from `develop` to `main` only after review and validation.
-
-## Naming rules
-
-- Branch names: English.
-- Pull request titles: English.
-- Commit messages: English.
-- GitHub issues/tasks: Spanish.
-
-## Suggested branch naming
-
-```txt
-feature/short-description
-fix/short-description
-chore/short-description
-refactor/short-description
-```
 
 ## Roadmap
 
