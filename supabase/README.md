@@ -5,6 +5,7 @@ This folder contains the database files for the NativasApp MVP.
 ## Files
 
 - `schema.sql`: creates the initial tables, indexes and update triggers.
+- `rls-policies.sql`: enables Row Level Security and creates access policies.
 
 ## Initial tables
 
@@ -41,10 +42,34 @@ Main use cases:
 
 1. Open your Supabase project.
 2. Go to SQL Editor.
-3. Copy the content from `schema.sql`.
-4. Run the SQL.
-5. Continue with RLS policies before connecting production data.
+3. Run `schema.sql` first.
+4. Run `rls-policies.sql` second.
+5. Create at least one authenticated admin user.
+6. Add that user to `admin_profiles` with the `owner` role.
+7. Test permissions before using production data.
 
-## Next step
+## Public app notes
 
-Add Row Level Security policies in a separate SQL file before exposing admin features.
+- The frontend should use the public Supabase key from `.env`.
+- Public visitors can submit applications.
+- Public visitors cannot read applications.
+- Public visitors can only read published news.
+- Admin actions require an authenticated admin profile.
+
+## Project admin example
+
+Use `admin@nois.dev` for admin examples and local setup documentation.
+
+## Recommended first owner insert
+
+After creating your first Supabase Auth user, add it as owner from the SQL Editor:
+
+```sql
+insert into public.admin_profiles (id, email, display_name, role)
+values (
+  'ADMIN_USER_ID',
+  'admin@nois.dev',
+  'Admin',
+  'owner'
+);
+```
