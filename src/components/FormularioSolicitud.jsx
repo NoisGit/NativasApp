@@ -9,12 +9,13 @@ const initialForm = {
   phone: '',
   birthDate: '',
   experience: 'Sin experiencia',
-  availability: '',
+  availability: [],
   message: '',
   privacyAccepted: false
 }
 
 const applicationEndpoint = import.meta.env.VITE_APPLICATION_FORM_ENDPOINT
+const availabilityOptions = ['Martes', 'Jueves', 'Domingo']
 
 const getAge = (birthDate) => {
   const today = new Date()
@@ -41,12 +42,26 @@ export function FormularioSolicitud () {
     }))
   }
 
+  const updateAvailability = (day) => {
+    setForm((currentForm) => {
+      const hasDay = currentForm.availability.includes(day)
+
+      return {
+        ...currentForm,
+        availability: hasDay
+          ? currentForm.availability.filter((item) => item !== day)
+          : [...currentForm.availability, day]
+      }
+    })
+  }
+
   const validateForm = () => {
     if (!form.fullName.trim()) return 'Ingresa tu nombre.'
     if (!form.email.trim()) return 'Ingresa tu correo.'
     if (!form.phone.trim()) return 'Ingresa tu teléfono.'
     if (!form.birthDate) return 'Ingresa tu fecha de nacimiento.'
     if (getAge(form.birthDate) < 18) return 'Debes tener al menos 18 años para postular.'
+    if (!form.availability.length) return 'Selecciona al menos un día disponible.'
     if (!form.message.trim()) return 'Cuéntanos brevemente por qué quieres unirte.'
     if (!form.privacyAccepted) return 'Debes aceptar el uso de tus datos para poder enviar la postulación.'
 
@@ -83,7 +98,9 @@ export function FormularioSolicitud () {
         body: JSON.stringify({
           subject: 'Nueva postulación Nativas Roller Derby',
           to: 'niconoisy@gmail.com',
-          ...form
+          ...form,
+          phone: `+569${form.phone}`,
+          availability: form.availability.join(', ')
         })
       })
 
@@ -130,8 +147,7 @@ export function FormularioSolicitud () {
                     <input
                       value={form.fullName}
                       onChange={(event) => updateField('fullName', event.target.value)}
-                      className='rounded-2xl border border-nativas-border bg-nativas-deep-blue px-4 py-3 text-white outline-none transition placeholder:text-nativas-mist/60 focus:border-nativas-turquoise focus:ring-2 focus:ring-nativas-turquoise/30'
-                      placeholder='Tu nombre'
+                      className='rounded-2xl border border-nativas-border bg-nativas-deep-blue px-4 py-3 text-white outline-none transition focus:border-nativas-turquoise focus:ring-2 focus:ring-nativas-turquoise/30'
                       required
                     />
                   </label>
@@ -142,8 +158,7 @@ export function FormularioSolicitud () {
                       type='email'
                       value={form.email}
                       onChange={(event) => updateField('email', event.target.value)}
-                      className='rounded-2xl border border-nativas-border bg-nativas-deep-blue px-4 py-3 text-white outline-none transition placeholder:text-nativas-mist/60 focus:border-nativas-turquoise focus:ring-2 focus:ring-nativas-turquoise/30'
-                      placeholder='correo@ejemplo.com'
+                      className='rounded-2xl border border-nativas-border bg-nativas-deep-blue px-4 py-3 text-white outline-none transition focus:border-nativas-turquoise focus:ring-2 focus:ring-nativas-turquoise/30'
                       required
                     />
                   </label>
@@ -152,14 +167,20 @@ export function FormularioSolicitud () {
                 <div className='grid gap-5 sm:grid-cols-2'>
                   <label className='grid gap-2 text-sm font-bold text-white'>
                     Teléfono
-                    <input
-                      type='tel'
-                      value={form.phone}
-                      onChange={(event) => updateField('phone', event.target.value)}
-                      className='rounded-2xl border border-nativas-border bg-nativas-deep-blue px-4 py-3 text-white outline-none transition placeholder:text-nativas-mist/60 focus:border-nativas-turquoise focus:ring-2 focus:ring-nativas-turquoise/30'
-                      placeholder='+56 9 1234 5678'
-                      required
-                    />
+                    <div className='flex overflow-hidden rounded-2xl border border-nativas-border bg-nativas-deep-blue focus-within:border-nativas-turquoise focus-within:ring-2 focus-within:ring-nativas-turquoise/30'>
+                      <span className='flex items-center gap-2 border-r border-nativas-border px-4 text-sm font-bold text-white'>
+                        <span>🇨🇱</span>
+                        <span>+569</span>
+                      </span>
+                      <input
+                        type='tel'
+                        value={form.phone}
+                        onChange={(event) => updateField('phone', event.target.value.replace(/\D/g, '').slice(0, 8))}
+                        className='min-w-0 flex-1 bg-transparent px-4 py-3 text-white outline-none'
+                        maxLength='8'
+                        required
+                      />
+                    </div>
                   </label>
 
                   <label className='grid gap-2 text-sm font-bold text-white'>
@@ -188,15 +209,22 @@ export function FormularioSolicitud () {
                   </select>
                 </label>
 
-                <label className='grid gap-2 text-sm font-bold text-white'>
-                  Disponibilidad
-                  <input
-                    value={form.availability}
-                    onChange={(event) => updateField('availability', event.target.value)}
-                    className='rounded-2xl border border-nativas-border bg-nativas-deep-blue px-4 py-3 text-white outline-none transition placeholder:text-nativas-mist/60 focus:border-nativas-turquoise focus:ring-2 focus:ring-nativas-turquoise/30'
-                    placeholder='Ej: puedo martes y jueves'
-                  />
-                </label>
+                <fieldset className='grid gap-3'>
+                  <legend className='text-sm font-bold text-white'>Disponibilidad</legend>
+                  <div className='grid gap-3 sm:grid-cols-3'>
+                    {availabilityOptions.map((day) => (
+                      <label key={day} className='flex items-center gap-3 rounded-2xl border border-nativas-border bg-white/5 p-4 text-sm font-bold text-white'>
+                        <input
+                          type='checkbox'
+                          checked={form.availability.includes(day)}
+                          onChange={() => updateAvailability(day)}
+                          className='h-4 w-4 accent-nativas-turquoise'
+                        />
+                        {day}
+                      </label>
+                    ))}
+                  </div>
+                </fieldset>
 
                 <label className='grid gap-2 text-sm font-bold text-white'>
                   ¿Por qué quieres unirte?
