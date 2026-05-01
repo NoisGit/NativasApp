@@ -1,20 +1,39 @@
 import { useNavigate } from 'react-router-dom'
 import { Badge, Button, Card, Container, Section, SectionHeading } from '../../components/ui'
+import { Footer } from '../../components/Footer'
 import heroImage from '../../assets/roller.jpg'
 import derbyImage from '../../assets/roller-derby.jpg'
 
 const values = [
   {
-    title: 'Comunidad',
-    description: 'Un espacio para entrenar, aprender y crecer con otras personas que aman el movimiento.'
+    title: 'Fortaleza',
+    description: 'Entrenamos con dureza, constancia y respeto por el proceso de cada persona.'
   },
   {
-    title: 'Fuerza',
-    description: 'Roller derby combina estrategia, resistencia y confianza dentro y fuera de la pista.'
+    title: 'Concentración',
+    description: 'Roller derby exige foco, estrategia y conexión con el equipo dentro de la pista.'
   },
   {
-    title: 'Identidad',
-    description: 'Nativas nace desde Temuco con una vibra propia, fuerte y conectada con su territorio.'
+    title: 'Renovación',
+    description: 'Crecemos temporada a temporada, sin perder sensibilidad ni conexión con nuestra raíz.'
+  }
+]
+
+const trainings = [
+  {
+    day: 'Martes',
+    time: '20:00 a 21:30',
+    place: 'Cancha Campos Deportivos'
+  },
+  {
+    day: 'Jueves',
+    time: '20:00 a 21:30',
+    place: 'Pista de patinaje Parque Estadio'
+  },
+  {
+    day: 'Domingo',
+    time: '09:00 a 10:00',
+    place: 'Multicancha Pichicautín'
   }
 ]
 
@@ -24,18 +43,22 @@ const steps = [
   'Te contactamos para contarte los próximos pasos.'
 ]
 
-const news = [
+const faqs = [
   {
-    title: 'Convocatoria abierta',
-    description: 'Pronto compartiremos novedades para quienes quieran sumarse al equipo.'
+    question: '¿Necesito experiencia para postular?',
+    answer: 'No. Puedes postular con o sin experiencia previa. Lo importante es tener disposición para aprender, entrenar y trabajar en equipo.'
   },
   {
-    title: 'Entrenamientos y comunidad',
-    description: 'La landing quedará preparada para mostrar noticias reales del equipo.'
+    question: '¿Cuál es la edad mínima?',
+    answer: 'La edad mínima para postular es 18 años.'
   },
   {
-    title: 'Marca en construcción',
-    description: 'El diseño ya considera los colores y vibra de Nativas sin usar logos todavía.'
+    question: '¿Dónde entrena Nativas?',
+    answer: 'Entrenamos en Temuco: martes en Campos Deportivos, jueves en Parque Estadio y domingos en Pichicautín.'
+  },
+  {
+    question: '¿Qué es el roller derby?',
+    answer: 'Es un deporte de contacto, velocidad y estrategia sobre patines. Se juega en equipo y combina resistencia, táctica y comunicación.'
   }
 ]
 
@@ -61,7 +84,7 @@ export function Home () {
 
             <nav className='hidden items-center gap-8 text-sm font-semibold text-nativas-mist lg:flex'>
               <button type='button' onClick={() => scrollToSection('about')} className='transition hover:text-white'>Equipo</button>
-              <button type='button' onClick={() => scrollToSection('news')} className='transition hover:text-white'>Noticias</button>
+              <button type='button' onClick={() => scrollToSection('training')} className='transition hover:text-white'>Entrenamientos</button>
               <button type='button' onClick={() => scrollToSection('apply')} className='transition hover:text-white'>Postulación</button>
             </nav>
 
@@ -82,7 +105,7 @@ export function Home () {
                 Únete a Nativas y vive el roller derby desde adentro.
               </h1>
               <p className='mt-5 max-w-2xl text-base leading-8 text-nativas-mist sm:mt-6 sm:text-lg lg:text-xl'>
-                Una comunidad para entrenar, aprender, compartir y crecer en equipo. Estamos preparando una experiencia simple para que nuevas personas puedan conocer y postular.
+                Inquebrantables como la madre tierra. En esta nueva temporada reflejamos fortaleza y dureza, sin desligarnos de la sensibilidad y el constante crecimiento.
               </p>
 
               <div className='mt-8 grid gap-3 sm:mt-10 sm:flex sm:flex-wrap sm:gap-4'>
@@ -103,12 +126,12 @@ export function Home () {
               />
               <div className='absolute inset-0 bg-gradient-to-t from-nativas-night via-nativas-night/45 to-transparent' />
               <div className='relative flex min-h-[320px] flex-col justify-end p-6 sm:min-h-[420px] sm:p-8'>
-                <p className='text-xs font-bold uppercase tracking-[0.24em] text-nativas-turquoise sm:text-sm sm:tracking-[0.28em]'>Logo space</p>
+                <p className='text-xs font-bold uppercase tracking-[0.24em] text-nativas-turquoise sm:text-sm sm:tracking-[0.28em]'>18+ · Sin experiencia previa requerida</p>
                 <p className='mt-4 text-2xl font-black leading-tight text-white sm:text-3xl lg:text-4xl'>
-                  Imagen actual conservada, marca lista para crecer.
+                  Entrena, aprende y encuentra tu lugar en la pista.
                 </p>
                 <p className='mt-4 max-w-sm text-sm leading-7 text-nativas-mist sm:text-base'>
-                  Dejamos este bloque preparado para integrar el logo oficial cuando los assets finales estén en el repo.
+                  El logo oficial se integrará más adelante. Por ahora mantenemos el diseño limpio y preparado para recibir los assets finales.
                 </p>
               </div>
             </Card>
@@ -129,9 +152,9 @@ export function Home () {
 
             <div>
               <SectionHeading
-                eyebrow='Sobre el equipo'
-                title='Una landing pensada para reclutar sin perder identidad.'
-                description='Nativas necesita una web que explique quiénes son, qué es el roller derby y cómo una persona puede acercarse al equipo sin sentirse perdida.'
+                eyebrow='Sobre Nativas'
+                title='Roller derby desde Temuco, con identidad y comunidad.'
+                description='Nativas Roller Derby es un equipo de Temuco que reúne deporte, estrategia y crecimiento colectivo. El espacio está abierto a personas mayores de 18 años, con o sin experiencia previa, que quieran aprender y entrenar con compromiso.'
               />
 
               <div className='mt-10 grid gap-5 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3'>
@@ -147,21 +170,21 @@ export function Home () {
         </Container>
       </Section>
 
-      <Section id='news'>
+      <Section id='training'>
         <Container>
           <div className='grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start xl:gap-14'>
             <SectionHeading
-              eyebrow='Noticias'
-              title='Novedades listas para conectar con Supabase.'
-              description='Por ahora usamos contenido temporal. Luego esta sección mostrará noticias reales del equipo desde la base de datos.'
+              eyebrow='Entrenamientos'
+              title='Tres espacios semanales para entrenar en Temuco.'
+              description='Estos son los horarios base del equipo. La información puede ajustarse según temporada, actividades o disponibilidad de espacios.'
             />
 
-            <div className='grid gap-5 sm:grid-cols-2 lg:grid-cols-1'>
-              {news.map((item) => (
-                <Card key={item.title} className='p-5'>
-                  <p className='text-xs font-bold uppercase tracking-[0.22em] text-nativas-turquoise sm:text-sm'>Nativas update</p>
-                  <h3 className='mt-3 text-2xl font-black text-white'>{item.title}</h3>
-                  <p className='mt-3 leading-7 text-nativas-mist'>{item.description}</p>
+            <div className='grid gap-5 sm:grid-cols-2 lg:grid-cols-3'>
+              {trainings.map((training) => (
+                <Card key={training.day} className='p-5'>
+                  <p className='text-sm font-bold uppercase tracking-[0.22em] text-nativas-turquoise'>{training.day}</p>
+                  <h3 className='mt-3 text-2xl font-black text-white'>{training.time}</h3>
+                  <p className='mt-3 leading-7 text-nativas-mist'>{training.place}</p>
                 </Card>
               ))}
             </div>
@@ -169,7 +192,28 @@ export function Home () {
         </Container>
       </Section>
 
-      <Section id='apply' className='bg-nativas-night-soft'>
+      <Section id='faq' className='bg-nativas-night-soft'>
+        <Container>
+          <div className='grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start xl:gap-14'>
+            <SectionHeading
+              eyebrow='Preguntas frecuentes'
+              title='Lo básico antes de postular.'
+              description='Si tienes dudas, estas respuestas te ayudan a entender mejor el proceso antes de enviar tu información.'
+            />
+
+            <div className='grid gap-5'>
+              {faqs.map((faq) => (
+                <Card key={faq.question} className='p-5'>
+                  <h3 className='text-xl font-black text-white'>{faq.question}</h3>
+                  <p className='mt-3 leading-7 text-nativas-mist'>{faq.answer}</p>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </Container>
+      </Section>
+
+      <Section id='apply'>
         <Container>
           <Card className='grid gap-10 p-6 sm:p-8 md:p-10 lg:grid-cols-[1fr_0.9fr] lg:items-center'>
             <div>
@@ -178,7 +222,7 @@ export function Home () {
                 Postular debería sentirse claro desde el primer click.
               </h2>
               <p className='mt-5 leading-8 text-nativas-mist'>
-                Este MVP está orientado a que cualquier persona pueda entender el proceso, completar su información y quedar en contacto con el equipo.
+                Si tienes 18 años o más, puedes postular con o sin experiencia. Revisaremos tus datos y nos pondremos en contacto contigo para contarte los próximos pasos.
               </p>
               <div className='mt-8'>
                 <Button className='w-full sm:w-auto' onClick={() => navigate('/solicitud')}>Ir al formulario</Button>
@@ -198,6 +242,8 @@ export function Home () {
           </Card>
         </Container>
       </Section>
+
+      <Footer />
     </main>
   )
 }

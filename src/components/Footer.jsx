@@ -1,51 +1,43 @@
-import React from 'react'
-import {
-  FaFacebookSquare,
-  FaInstagram,
-  FaTwitterSquare
-} from 'react-icons/fa'
+import { FaInstagram } from 'react-icons/fa'
+
+const instagramUrl = 'https://www.instagram.com/nativas_rollerderby?igsh=MW84Mm5nbm5tN2ZvcA=='
 
 export const Footer = () => {
   return (
-    <div className='md:w-full p-8 mx-auto py-16 grid lg:grid-cols-3 gap-8 text-gray-300 bg-black'>
-      <div>
-        <h1 className='w-full text-3xl font-bold text-indigo-500'>Equipo Nativas</h1>
-        <p className='py-4'>Somos el equipo de roller derby "Nativas". ¡Acompáñanos en nuestras aventuras en patines!</p>
-        <div className='flex justify-between md:w-[75%] my-6'>
-          <FaFacebookSquare size={30} />
-          <FaInstagram size={30} />
-          <FaTwitterSquare size={30} />
+    <footer className='border-t border-nativas-border bg-nativas-night px-4 py-10 text-nativas-mist sm:px-6 lg:px-8'>
+      <div className='mx-auto grid max-w-7xl gap-8 md:grid-cols-[1.2fr_0.8fr] md:items-center'>
+        <div>
+          <p className='text-sm font-bold uppercase tracking-[0.3em] text-nativas-turquoise'>Nativas Roller Derby</p>
+          <p className='mt-4 max-w-2xl leading-7'>
+            Equipo de roller derby de Temuco. Entrenamos con fortaleza, concentración y conexión, construyendo comunidad dentro y fuera de la pista.
+          </p>
+        </div>
+
+        <div className='flex flex-col gap-5 md:items-end'>
+          <nav className='flex flex-wrap gap-x-5 gap-y-2 text-sm font-semibold'>
+            <a href='#about' className='transition hover:text-white'>Equipo</a>
+            <a href='#training' className='transition hover:text-white'>Entrenamientos</a>
+            <a href='#faq' className='transition hover:text-white'>FAQ</a>
+            <a href='#apply' className='transition hover:text-white'>Postulación</a>
+          </nav>
+
+          <a
+            href={instagramUrl}
+            target='_blank'
+            rel='noreferrer'
+            className='inline-flex items-center gap-3 rounded-full border border-nativas-turquoise/40 bg-white/5 px-4 py-2 text-sm font-bold text-white transition hover:bg-nativas-turquoise/10 hover:text-nativas-turquoise'
+            aria-label='Abrir Instagram de Nativas Roller Derby'
+          >
+            <FaInstagram className='text-xl' />
+            Instagram
+          </a>
         </div>
       </div>
-      <div className='lg:col-span-2 flex justify-between mt-6'>
-        <div>
-          <h6 className='font-medium text-gray-400'>Información</h6>
-          <ul>
-            <li className='py-2 text-sm'>Historia</li>
-            <li className='py-2 text-sm'>Jugadoras</li>
-            <li className='py-2 text-sm'>Partidos</li>
-            <li className='py-2 text-sm'>Contacto</li>
-          </ul>
-        </div>
-        <div>
-          <h6 className='font-medium text-gray-400'>Patrocinadores</h6>
-          <ul>
-            <li className='py-2 text-sm'>Sponsor 1</li>
-            <li className='py-2 text-sm'>Sponsor 2</li>
-            <li className='py-2 text-sm'>Sponsor 3</li>
-            <li className='py-2 text-sm'>Sponsor 4</li>
-          </ul>
-        </div>
-        <div>
-          <h6 className='font-medium text-gray-400'>Eventos</h6>
-          <ul>
-            <li className='py-2 text-sm'>Próximos partidos</li>
-            <li className='py-2 text-sm'>Entrenamientos</li>
-            <li className='py-2 text-sm'>Campeonatos</li>
-            <li className='py-2 text-sm'>Talleres</li>
-          </ul>
-        </div>
+
+      <div className='mx-auto mt-8 flex max-w-7xl flex-col gap-2 border-t border-nativas-border pt-6 text-xs text-nativas-mist/80 sm:flex-row sm:items-center sm:justify-between'>
+        <p>© {new Date().getFullYear()} Nativas Roller Derby.</p>
+        <p>Landing MVP desarrollada para reclutamiento y comunidad.</p>
       </div>
-    </div>
+    </footer>
   )
 }
