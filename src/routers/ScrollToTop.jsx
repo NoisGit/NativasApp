@@ -2,12 +2,15 @@ import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 
 export function ScrollToTop () {
-  const { hash, pathname } = useLocation()
+  const { pathname, search } = useLocation()
 
   useEffect(() => {
-    if (hash) {
+    const params = new URLSearchParams(search)
+    const section = params.get('section')
+
+    if (section) {
       window.requestAnimationFrame(() => {
-        const target = document.querySelector(hash)
+        const target = document.getElementById(section)
 
         if (target) {
           target.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -18,7 +21,7 @@ export function ScrollToTop () {
     }
 
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
-  }, [hash, pathname])
+  }, [pathname, search])
 
   return null
 }
