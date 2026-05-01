@@ -2,6 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+    color-scheme: dark;
+    --nativas-night: #0D1015;
+    --nativas-night-soft: #10131A;
+    --nativas-deep-blue: #0A131C;
+    --nativas-royal: #2F2EB0;
+    --nativas-turquoise: #66DDDB;
+    --nativas-aqua: #76F8F8;
+    --nativas-mist: #CBD5E1;
+    --nativas-border: #2C2F38;
+}
+
+body {
+    background: var(--nativas-night);
+    color: #FFFFFF;
+}
+
+.dash {
+    width: 100%;
+    height: 100vh;
+    background: #100c3d;
+    overflow: hidden;
+    display: flex;
+}
+
 .filtro {
     filter: drop-shadow(54px 4px 31px rgba(0, 0, 0, 0.25));
 }

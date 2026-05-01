@@ -25,7 +25,7 @@ export function FormularioRegistro ({ handleRegistro }) {
   return (
     <form
       onSubmit={handleForm}
-      className='w-2/5 h-full flex flex-col items-center justify-center gap-2 overflow-hidden'
+      className='w-full md:mt-36 h-full flex flex-col items-center justify-center gap-2 overflow-hidden'
     >
       {/* contenedor del titulo */}
       <div className='text-violet-700  font-caveat text-center txt-shadow flex flex-col gap-2.5'>
@@ -35,7 +35,7 @@ export function FormularioRegistro ({ handleRegistro }) {
         </h2>
       </div>
       {/* contenedor de los inputs */}
-      <div className='w-full flex flex-col items-center gap-2.5'>
+      <div className='w-5/6 flex flex-col items-center gap-2.5'>
         {/* inputs nombre y apellido */}
         <div className='flex w-full  gap-2.5'>
           <input
@@ -75,7 +75,7 @@ export function FormularioRegistro ({ handleRegistro }) {
         </div>
       </div>
       {/* input checkbox */}
-      <div className='w-full'>
+      <div className='w-5/6'>
         <label className='font-mplus font-bold'>
           <input
             type='checkbox'
@@ -87,7 +87,7 @@ export function FormularioRegistro ({ handleRegistro }) {
       </div>
 
       {/* container de los botones */}
-      <div className='w-full flex gap-2.5'>
+      <div className='w-5/6 flex gap-2.5'>
 
         {/* boton de registro */}
         <button

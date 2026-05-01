@@ -2,7 +2,7 @@ import { Layout } from '../../hoc/layout/Layout'
 import { NavBar } from '../../components/NavBar'
 import { Footer } from '../../components/Footer'
 import { FormNoticia } from '../../components/FormNoticia'
-import { db } from '../../firebase'
+import { db } from '../../api/firebase'
 import { collection, addDoc } from 'firebase/firestore'
 
 export function AdmPage () {

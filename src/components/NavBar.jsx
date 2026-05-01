@@ -11,7 +11,7 @@ export function NavBar () {
 
   return (
     <nav
-      className='z-40 flex justify-between items-center w-full h-16 px-4 md:px-0 text-white  bg-gradient-to-r from-sky-500 to-indigo-500'
+      className='position fixed z-40 flex justify-between items-center w-full h-16 px-4 md:px-0 text-white  bg-gradient-to-r from-sky-500 to-indigo-500'
     >
       {/* <h1 className='text-3xl text-indigo-500 w-full font-bold'>Nativas</h1> */}
       <picture className='w-full'>

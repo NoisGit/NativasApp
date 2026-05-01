@@ -4,13 +4,14 @@ import registerImg from '../../assets/Roller_Form.png'
 import { NavBar } from '../../components/NavBar'
 import { Mensaje } from '../../components/Mensaje'
 import { Layout } from '../../hoc/layout/Layout'
-import { app, db } from '../../firebase'
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
+import { db, auth } from '../../api/firebase'
+import { createUserWithEmailAndPassword } from 'firebase/auth'
 import { addDoc, collection } from 'firebase/firestore'
+import { useNavigate } from 'react-router-dom'
 
 export function Registrate () {
   const [successReg, setSuccessReg] = useState(false)
-  const auth = getAuth(app)
+  const navigate = useNavigate()
 
   const agregarUsuario = async (usuario) => {
     try {
@@ -37,9 +38,7 @@ export function Registrate () {
         await agregarUsuario(newUser)
         console.log('Usuario agregado')
         setSuccessReg(true)
-        setTimeout(() => {
-          window.location.href = '/login'
-        }, 3000)
+        navigate('/login')
       }
     } catch (error) {
       const errorCode = error.code
@@ -68,7 +67,6 @@ export function Registrate () {
                 )}
           </div>
         </div>
-
       </div>
     </Layout>
   )

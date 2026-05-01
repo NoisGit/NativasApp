@@ -7,7 +7,7 @@ import {
 
 export const Footer = () => {
   return (
-    <div className='max-w-[1240px] md:w-full p-8 mx-auto py-16 grid lg:grid-cols-3 gap-8 text-gray-300 bg-black'>
+    <div className='md:w-full p-8 mx-auto py-16 grid lg:grid-cols-3 gap-8 text-gray-300 bg-black'>
       <div>
         <h1 className='w-full text-3xl font-bold text-indigo-500'>Equipo Nativas</h1>
         <p className='py-4'>Somos el equipo de roller derby "Nativas". ¡Acompáñanos en nuestras aventuras en patines!</p>
