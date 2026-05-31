@@ -110,31 +110,22 @@ export function Home () {
   }
 
   return (
-    <main ref={landingRef} className='min-h-screen overflow-hidden bg-nativas-night text-white selection:bg-nativas-turquoise selection:text-nativas-night'>
-      <section className='relative isolate min-h-screen overflow-hidden'>
-        <div className='absolute inset-0 -z-20 bg-[radial-gradient(circle_at_12%_12%,rgba(102,221,219,0.28),transparent_30%),radial-gradient(circle_at_78%_18%,rgba(47,46,176,0.36),transparent_34%),linear-gradient(135deg,#050608_0%,#0D1015_44%,#151039_100%)]' />
-        <div className='absolute inset-x-0 top-0 -z-10 h-36 bg-gradient-to-b from-nativas-turquoise/10 to-transparent' />
-        <div data-parallax data-speed='18' className='absolute -left-28 top-28 -z-10 h-80 w-80 rounded-full border border-nativas-turquoise/20 bg-nativas-turquoise/10 blur-2xl' />
-        <div data-parallax data-speed='28' className='absolute -right-20 bottom-10 -z-10 h-96 w-96 rounded-full border border-nativas-royal/30 bg-nativas-royal/25 blur-3xl' />
-        <div className='absolute inset-0 -z-10 bg-[linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:72px_72px] opacity-30 [mask-image:linear-gradient(to_bottom,black,transparent_78%)]' />
+    <main ref={landingRef} className='min-h-screen overflow-x-hidden bg-nativas-night text-white selection:bg-nativas-turquoise selection:text-nativas-night'>
+      <section className='relative isolate overflow-hidden bg-nativas-night'>
+        <div className='absolute left-0 top-0 -z-10 h-full w-px bg-nativas-turquoise/30 sm:left-8' />
+        <div className='absolute right-0 top-0 -z-10 hidden h-full w-px bg-white/10 lg:block' />
 
-        <Container className='flex min-h-screen flex-col'>
-          <header data-animate className='flex items-center justify-between gap-4 py-5 sm:py-6'>
+        <Container className='flex min-h-[auto] flex-col lg:min-h-screen'>
+          <header data-animate className='flex flex-wrap items-center justify-between gap-3 py-4 sm:py-6'>
             <button type='button' onClick={() => navigate('/')} className='group min-w-0 text-left'>
               <span className='flex items-center gap-3'>
-                <span className='grid h-11 w-11 place-items-center rounded-full border border-nativas-turquoise/40 bg-white/5 text-sm font-black text-nativas-turquoise shadow-nativas-glow transition group-hover:scale-105'>N</span>
+                <span className='grid h-10 w-10 place-items-center rounded-full border border-nativas-turquoise/50 bg-nativas-deep-blue text-sm font-black text-nativas-turquoise transition group-hover:scale-105 sm:h-11 sm:w-11'>N</span>
                 <span>
-                  <span className='block truncate text-xs font-black uppercase tracking-[0.34em] text-white sm:text-sm sm:tracking-[0.42em]'>Nativas</span>
-                  <span className='block text-[11px] uppercase tracking-[0.24em] text-nativas-mist sm:text-xs'>Roller Derby</span>
+                  <span className='block truncate text-xs font-black uppercase tracking-[0.28em] text-white sm:text-sm sm:tracking-[0.42em]'>Nativas</span>
+                  <span className='block text-[10px] uppercase tracking-[0.22em] text-nativas-mist sm:text-xs'>Roller Derby</span>
                 </span>
               </span>
             </button>
-
-            <nav className='hidden rounded-full border border-white/10 bg-white/[0.04] px-5 py-3 text-sm font-semibold text-nativas-mist shadow-2xl shadow-black/20 backdrop-blur-xl lg:flex lg:items-center lg:gap-6'>
-              <button type='button' onClick={() => scrollToSection('about')} className='transition hover:text-white'>Equipo</button>
-              <button type='button' onClick={() => scrollToSection('training')} className='transition hover:text-white'>Entrenamientos</button>
-              <button type='button' onClick={() => scrollToSection('apply')} className='transition hover:text-white'>Postulación</button>
-            </nav>
 
             <div className='flex items-center gap-2 sm:gap-3'>
               <Button variant='ghost' className='hidden sm:inline-flex' onClick={() => navigate('/login')}>
@@ -144,21 +135,32 @@ export function Home () {
                 Postula
               </Button>
             </div>
+
+            <nav className='order-3 flex w-full gap-2 overflow-x-auto rounded-2xl border border-white/10 bg-white/[0.035] p-2 text-xs font-bold uppercase tracking-[0.16em] text-nativas-mist sm:w-auto sm:gap-3 sm:rounded-full sm:px-4 sm:text-sm sm:normal-case sm:tracking-normal lg:order-none'>
+              <button type='button' onClick={() => scrollToSection('about')} className='shrink-0 rounded-full px-3 py-2 transition hover:bg-white/5 hover:text-white'>Equipo</button>
+              <button type='button' onClick={() => scrollToSection('training')} className='shrink-0 rounded-full px-3 py-2 transition hover:bg-white/5 hover:text-white'>Entrenamientos</button>
+              <button type='button' onClick={() => scrollToSection('apply')} className='shrink-0 rounded-full px-3 py-2 transition hover:bg-white/5 hover:text-white'>Postulación</button>
+            </nav>
           </header>
 
-          <div className='grid flex-1 items-center gap-10 pb-14 pt-8 sm:gap-12 sm:py-16 lg:grid-cols-[1.02fr_0.98fr] lg:py-20 xl:gap-16'>
+          <div className='grid flex-1 items-center gap-8 pb-12 pt-6 sm:gap-12 sm:pb-16 sm:pt-10 lg:grid-cols-[1fr_0.92fr] lg:py-20 xl:gap-16'>
             <div className='relative z-10 max-w-4xl'>
               <div data-animate>
                 <Badge>Temuco, Chile · Reclutamiento abierto</Badge>
               </div>
-              <h1 data-animate className='mt-7 max-w-5xl text-5xl font-black tracking-[-0.055em] text-white sm:text-7xl lg:text-8xl xl:text-9xl'>
-                No vengas a mirar la pista. Ven a tomarla.
-              </h1>
+
+              <div data-animate className='mt-6 border-l-4 border-nativas-turquoise pl-4 sm:mt-8 sm:pl-6'>
+                <p className='mb-3 text-xs font-black uppercase tracking-[0.32em] text-nativas-turquoise sm:text-sm'>Temporada Nativas</p>
+                <h1 className='max-w-5xl text-4xl font-black leading-[0.94] tracking-[-0.045em] text-white sm:text-6xl lg:text-7xl xl:text-8xl'>
+                  No vengas a mirar la pista. Ven a tomarla.
+                </h1>
+              </div>
+
               <p data-animate className='mt-5 max-w-2xl text-base leading-8 text-nativas-mist sm:mt-6 sm:text-lg lg:text-xl'>
                 Nativas es roller derby desde Temuco: contacto, estrategia, comunidad y una energía que se entrena dentro y fuera de la cancha.
               </p>
 
-              <div data-animate className='mt-8 grid gap-3 sm:mt-10 sm:flex sm:flex-wrap sm:gap-4'>
+              <div data-animate className='mt-7 grid gap-3 sm:mt-9 sm:flex sm:flex-wrap sm:gap-4'>
                 <Button className='w-full sm:w-auto' onClick={() => navigate('/solicitud')}>
                   Postula ahora
                 </Button>
@@ -167,54 +169,51 @@ export function Home () {
                 </Button>
               </div>
 
-              <div data-animate className='mt-10 grid gap-3 sm:grid-cols-3'>
+              <div data-animate className='mt-8 grid gap-3 sm:mt-10 sm:grid-cols-3'>
                 {stats.map((stat) => (
-                  <div key={stat.label} className='rounded-3xl border border-white/10 bg-white/[0.045] p-4 backdrop-blur-xl'>
-                    <p className='text-3xl font-black text-nativas-turquoise'>{stat.value}</p>
-                    <p className='mt-2 text-xs font-bold uppercase tracking-[0.18em] text-nativas-mist'>{stat.label}</p>
+                  <div key={stat.label} className='rounded-2xl border border-white/10 bg-nativas-night-soft p-4 sm:rounded-3xl'>
+                    <p className='text-3xl font-black text-nativas-turquoise sm:text-4xl'>{stat.value}</p>
+                    <p className='mt-2 text-[11px] font-bold uppercase tracking-[0.16em] text-nativas-mist sm:text-xs'>{stat.label}</p>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div data-hero-visual className='relative mx-auto w-full max-w-[560px] lg:max-w-none'>
-              <div data-float className='absolute -left-4 top-10 z-20 hidden rounded-3xl border border-nativas-turquoise/30 bg-nativas-night/80 p-4 shadow-nativas-glow backdrop-blur-xl sm:block lg:-left-10'>
-                <p className='text-xs font-bold uppercase tracking-[0.22em] text-nativas-turquoise'>Sin experiencia</p>
-                <p className='mt-2 text-sm text-nativas-mist'>Entramos juntas al proceso.</p>
+            <div data-hero-visual className='relative mx-auto w-full max-w-[520px] lg:max-w-none'>
+              <div className='mb-3 flex items-center justify-between rounded-2xl border border-white/10 bg-nativas-night-soft px-4 py-3 text-xs font-black uppercase tracking-[0.2em] text-nativas-mist sm:hidden'>
+                <span>18+</span>
+                <span className='text-nativas-turquoise'>Sin experiencia previa</span>
               </div>
 
-              <Card className='relative min-h-[430px] overflow-hidden p-0 sm:min-h-[560px] lg:rotate-2'>
-                <img
-                  src={heroImage}
-                  alt='Persona practicando roller derby'
-                  className='absolute inset-0 h-full w-full scale-105 object-cover opacity-85'
-                />
-                <div className='absolute inset-0 bg-gradient-to-t from-nativas-night via-nativas-night/35 to-transparent' />
-                <div className='absolute left-6 right-6 top-6 flex items-center justify-between rounded-full border border-white/10 bg-black/25 px-4 py-3 backdrop-blur-xl'>
-                  <span className='text-xs font-black uppercase tracking-[0.24em] text-nativas-turquoise'>Jam ready</span>
-                  <span className='h-2 w-2 rounded-full bg-nativas-aqua shadow-[0_0_20px_rgba(118,248,248,0.95)]' />
-                </div>
-                <div className='absolute bottom-0 left-0 right-0 p-6 sm:p-8'>
-                  <div className='mb-5 h-1.5 overflow-hidden rounded-full bg-white/10'>
-                    <div data-track-fill className='h-full rounded-full bg-nativas-turquoise' />
+              <div className='relative overflow-hidden rounded-[1.8rem] border border-nativas-border bg-nativas-night-soft p-2 shadow-nativas-glow sm:rounded-[2.4rem] sm:p-3 lg:-rotate-1'>
+                <div className='relative min-h-[320px] overflow-hidden rounded-[1.35rem] bg-nativas-deep-blue sm:min-h-[500px] sm:rounded-[1.9rem]'>
+                  <img
+                    src={heroImage}
+                    alt='Persona practicando roller derby'
+                    className='absolute inset-0 h-full w-full object-cover opacity-90'
+                  />
+                  <div className='absolute inset-x-0 bottom-0 bg-nativas-night/85 p-5 sm:p-7'>
+                    <div className='mb-4 h-1.5 overflow-hidden rounded-full bg-white/10'>
+                      <div data-track-fill className='h-full rounded-full bg-nativas-turquoise' />
+                    </div>
+                    <p className='text-xs font-black uppercase tracking-[0.28em] text-nativas-turquoise'>18+ · Postulación abierta</p>
+                    <p className='mt-3 text-2xl font-black leading-none text-white sm:text-4xl'>Aprende la táctica. Siente la velocidad.</p>
                   </div>
-                  <p className='text-xs font-black uppercase tracking-[0.28em] text-nativas-turquoise sm:text-sm'>18+ · Postulación abierta</p>
-                  <p className='mt-4 text-3xl font-black leading-none text-white sm:text-5xl'>Aprende la táctica. Siente la velocidad.</p>
                 </div>
-              </Card>
+              </div>
 
-              <div data-float className='absolute -bottom-5 right-3 z-20 rounded-3xl border border-white/10 bg-white/[0.06] p-4 shadow-2xl shadow-black/30 backdrop-blur-xl sm:right-8'>
-                <p className='text-4xl font-black text-white'>RD</p>
-                <p className='text-xs font-bold uppercase tracking-[0.2em] text-nativas-mist'>Roller Derby</p>
+              <div data-float className='absolute -right-1 -top-4 hidden rounded-2xl border border-nativas-turquoise/30 bg-nativas-night px-4 py-3 shadow-nativas-glow sm:block'>
+                <p className='text-xs font-bold uppercase tracking-[0.22em] text-nativas-turquoise'>Sin experiencia</p>
+                <p className='mt-1 text-sm text-nativas-mist'>Entramos juntas al proceso.</p>
               </div>
             </div>
           </div>
         </Container>
 
-        <div className='relative border-y border-white/10 bg-white/[0.035] py-4 backdrop-blur-xl'>
-          <div data-marquee className='flex w-[200%] gap-6 whitespace-nowrap text-sm font-black uppercase tracking-[0.28em] text-nativas-mist/70'>
+        <div className='relative border-y border-white/10 bg-nativas-night-soft py-3 sm:py-4'>
+          <div data-marquee className='flex w-[220%] gap-5 whitespace-nowrap text-xs font-black uppercase tracking-[0.24em] text-nativas-mist/70 sm:w-[200%] sm:text-sm'>
             {[...marqueeItems, ...marqueeItems, ...marqueeItems, ...marqueeItems].map((item, index) => (
-              <span key={`${item}-${index}`} className='flex items-center gap-6'>
+              <span key={`${item}-${index}`} className='flex items-center gap-5'>
                 {item}
                 <span className='h-1.5 w-1.5 rounded-full bg-nativas-turquoise' />
               </span>
@@ -224,19 +223,17 @@ export function Home () {
       </section>
 
       <Section id='about' className='relative bg-nativas-night-soft'>
-        <div data-parallax data-speed='12' className='absolute right-0 top-8 h-80 w-80 rounded-full bg-nativas-turquoise/10 blur-3xl' />
         <Container>
-          <div className='grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center xl:gap-14'>
-            <div data-reveal className='relative overflow-hidden rounded-[2rem] border border-nativas-border bg-nativas-deep-blue shadow-nativas-glow'>
+          <div className='grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center xl:gap-14'>
+            <div data-reveal className='relative overflow-hidden rounded-[1.8rem] border border-nativas-border bg-nativas-deep-blue sm:rounded-[2.2rem]'>
               <img
                 src={derbyImage}
                 alt='Ilustración de roller derby usada en el proyecto'
-                className='h-full max-h-[620px] w-full object-cover saturate-125'
+                className='h-[320px] w-full object-cover sm:h-[520px] lg:h-[620px]'
               />
-              <div className='absolute inset-0 bg-gradient-to-t from-nativas-night/80 via-transparent to-transparent' />
-              <div className='absolute bottom-6 left-6 right-6 rounded-3xl border border-white/10 bg-black/30 p-5 backdrop-blur-xl'>
-                <p className='text-xs font-black uppercase tracking-[0.28em] text-nativas-turquoise'>Identidad Nativas</p>
-                <p className='mt-3 text-2xl font-black text-white'>Dureza, raíz y comunidad en movimiento.</p>
+              <div className='absolute bottom-4 left-4 right-4 rounded-2xl border border-white/10 bg-nativas-night/90 p-4 sm:bottom-6 sm:left-6 sm:right-6 sm:rounded-3xl sm:p-5'>
+                <p className='text-xs font-black uppercase tracking-[0.24em] text-nativas-turquoise sm:tracking-[0.28em]'>Identidad Nativas</p>
+                <p className='mt-3 text-xl font-black text-white sm:text-2xl'>Dureza, raíz y comunidad en movimiento.</p>
               </div>
             </div>
 
@@ -247,16 +244,18 @@ export function Home () {
                 description='Nativas Roller Derby es un equipo de Temuco que reúne deporte, estrategia y crecimiento colectivo. El espacio está abierto a personas mayores de 18 años, con o sin experiencia previa, que quieran aprender y entrenar con compromiso.'
               />
 
-              <div data-stagger className='mt-10 grid gap-5 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3'>
+              <div data-stagger className='mt-8 grid gap-4 sm:mt-10 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3'>
                 {values.map((value) => (
-                  <Card key={value.title} data-stagger-item className='group relative h-full overflow-hidden'>
-                    <div className='absolute right-5 top-5 rounded-full border border-nativas-turquoise/20 px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-nativas-turquoise/80'>
-                      {value.metric}
-                    </div>
-                    <h3 className='pr-20 text-2xl font-black text-white'>{value.title}</h3>
-                    <p className='mt-5 leading-7 text-nativas-mist'>{value.description}</p>
-                    <div className='mt-7 h-px w-full bg-gradient-to-r from-nativas-turquoise/80 to-transparent transition group-hover:w-2/3' />
-                  </Card>
+                  <div key={value.title} data-stagger-item>
+                    <Card className='group relative h-full overflow-hidden p-5 sm:p-6'>
+                      <div className='mb-6 inline-flex rounded-full border border-nativas-turquoise/25 px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-nativas-turquoise/90'>
+                        {value.metric}
+                      </div>
+                      <h3 className='text-2xl font-black text-white'>{value.title}</h3>
+                      <p className='mt-4 leading-7 text-nativas-mist'>{value.description}</p>
+                      <div className='mt-6 h-px w-16 bg-nativas-turquoise transition group-hover:w-24' />
+                    </Card>
+                  </div>
                 ))}
               </div>
             </div>
@@ -264,10 +263,9 @@ export function Home () {
         </Container>
       </Section>
 
-      <Section id='training' className='relative'>
-        <div className='absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-nativas-turquoise/50 to-transparent' />
+      <Section id='training' className='relative bg-nativas-night'>
         <Container>
-          <div className='grid gap-10 lg:grid-cols-[0.76fr_1.24fr] lg:items-start xl:gap-14'>
+          <div className='grid gap-8 lg:grid-cols-[0.76fr_1.24fr] lg:items-start xl:gap-14'>
             <div data-reveal>
               <SectionHeading
                 eyebrow='Entrenamientos'
@@ -276,16 +274,19 @@ export function Home () {
               />
             </div>
 
-            <div data-stagger className='grid gap-5 sm:grid-cols-2 lg:grid-cols-3'>
+            <div data-stagger className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3'>
               {trainings.map((training, index) => (
-                <Card key={training.day} data-stagger-item className='group relative min-h-[280px] overflow-hidden p-5'>
-                  <div className='absolute -right-10 -top-10 h-32 w-32 rounded-full bg-nativas-turquoise/10 blur-2xl transition group-hover:bg-nativas-turquoise/20' />
-                  <p className='text-xs font-black uppercase tracking-[0.24em] text-nativas-turquoise'>{training.tag}</p>
-                  <p className='mt-8 text-7xl font-black leading-none text-white/10'>0{index + 1}</p>
-                  <h3 className='mt-6 text-2xl font-black text-white'>{training.day}</h3>
-                  <p className='mt-2 text-xl font-black text-nativas-turquoise'>{training.time}</p>
-                  <p className='mt-4 leading-7 text-nativas-mist'>{training.place}</p>
-                </Card>
+                <div key={training.day} data-stagger-item>
+                  <Card className='group relative min-h-[230px] overflow-hidden p-5 sm:min-h-[280px]'>
+                    <div className='flex items-center justify-between gap-3'>
+                      <p className='text-xs font-black uppercase tracking-[0.22em] text-nativas-turquoise'>{training.tag}</p>
+                      <p className='text-5xl font-black leading-none text-white/10'>0{index + 1}</p>
+                    </div>
+                    <h3 className='mt-8 text-2xl font-black text-white'>{training.day}</h3>
+                    <p className='mt-2 text-xl font-black text-nativas-turquoise'>{training.time}</p>
+                    <p className='mt-4 leading-7 text-nativas-mist'>{training.place}</p>
+                  </Card>
+                </div>
               ))}
             </div>
           </div>
@@ -294,7 +295,7 @@ export function Home () {
 
       <Section id='faq' className='relative bg-nativas-night-soft'>
         <Container>
-          <div className='grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start xl:gap-14'>
+          <div className='grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-start xl:gap-14'>
             <div data-reveal>
               <SectionHeading
                 eyebrow='Preguntas frecuentes'
@@ -303,50 +304,52 @@ export function Home () {
               />
             </div>
 
-            <div data-stagger className='grid gap-5'>
+            <div data-stagger className='grid gap-4'>
               {faqs.map((faq) => (
-                <Card key={faq.question} data-stagger-item className='p-5'>
-                  <h3 className='text-xl font-black text-white'>{faq.question}</h3>
-                  <p className='mt-3 leading-7 text-nativas-mist'>{faq.answer}</p>
-                </Card>
+                <div key={faq.question} data-stagger-item>
+                  <Card className='p-5'>
+                    <h3 className='text-lg font-black text-white sm:text-xl'>{faq.question}</h3>
+                    <p className='mt-3 leading-7 text-nativas-mist'>{faq.answer}</p>
+                  </Card>
+                </div>
               ))}
             </div>
           </div>
         </Container>
       </Section>
 
-      <Section id='apply' className='relative'>
-        <div data-parallax data-speed='18' className='absolute left-1/2 top-0 -z-10 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-nativas-royal/20 blur-3xl' />
+      <Section id='apply' className='relative bg-nativas-night'>
         <Container>
-          <Card data-reveal className='relative grid gap-10 overflow-hidden p-6 sm:p-8 md:p-10 lg:grid-cols-[0.92fr_1.08fr] lg:items-center'>
-            <div className='absolute inset-0 -z-10 bg-[radial-gradient(circle_at_12%_20%,rgba(102,221,219,0.14),transparent_30%),radial-gradient(circle_at_82%_80%,rgba(47,46,176,0.26),transparent_34%)]' />
-            <div>
-              <Badge>Proceso simple</Badge>
-              <h2 className='mt-6 text-4xl font-black tracking-[-0.04em] text-white sm:text-6xl'>
-                Postular debería sentirse como entrar a una nueva etapa.
-              </h2>
-              <p className='mt-5 leading-8 text-nativas-mist'>
-                Si tienes 18 años o más, puedes postular con o sin experiencia. Revisaremos tus datos y nos pondremos en contacto contigo para contarte los próximos pasos.
-              </p>
-              <div className='mt-8'>
-                <Button className='w-full sm:w-auto' onClick={() => navigate('/solicitud')}>Ir al formulario</Button>
+          <div data-reveal className='rounded-[1.8rem] border border-nativas-border bg-nativas-night-soft p-5 sm:rounded-[2.2rem] sm:p-8 md:p-10'>
+            <div className='grid gap-8 lg:grid-cols-[0.92fr_1.08fr] lg:items-center'>
+              <div>
+                <Badge>Proceso simple</Badge>
+                <h2 className='mt-5 text-3xl font-black leading-tight tracking-[-0.035em] text-white sm:mt-6 sm:text-5xl lg:text-6xl'>
+                  Postular debería sentirse como entrar a una nueva etapa.
+                </h2>
+                <p className='mt-5 leading-8 text-nativas-mist'>
+                  Si tienes 18 años o más, puedes postular con o sin experiencia. Revisaremos tus datos y nos pondremos en contacto contigo para contarte los próximos pasos.
+                </p>
+                <div className='mt-7 sm:mt-8'>
+                  <Button className='w-full sm:w-auto' onClick={() => navigate('/solicitud')}>Ir al formulario</Button>
+                </div>
+              </div>
+
+              <div data-stagger className='grid gap-4'>
+                {steps.map((step) => (
+                  <div key={step.number} data-stagger-item className='group flex gap-4 rounded-2xl border border-nativas-border bg-nativas-night p-4 transition hover:border-nativas-turquoise/40 sm:rounded-3xl sm:p-5'>
+                    <span className='flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-nativas-turquoise font-black text-nativas-night sm:h-12 sm:w-12'>
+                      {step.number}
+                    </span>
+                    <div>
+                      <h3 className='text-base font-black text-white sm:text-lg'>{step.title}</h3>
+                      <p className='mt-2 text-sm leading-7 text-nativas-mist sm:text-base'>{step.description}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
-
-            <div data-stagger className='grid gap-4'>
-              {steps.map((step) => (
-                <div key={step.number} data-stagger-item className='group flex gap-4 rounded-3xl border border-nativas-border bg-white/[0.045] p-5 backdrop-blur-xl transition hover:-translate-y-1 hover:border-nativas-turquoise/40 hover:bg-nativas-turquoise/10'>
-                  <span className='flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-nativas-turquoise font-black text-nativas-night shadow-nativas-glow'>
-                    {step.number}
-                  </span>
-                  <div>
-                    <h3 className='text-lg font-black text-white'>{step.title}</h3>
-                    <p className='mt-2 text-sm leading-7 text-nativas-mist sm:text-base'>{step.description}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Card>
+          </div>
         </Container>
       </Section>
 
