@@ -1,4 +1,4 @@
-import { HashRouter as Router, Route, Routes } from 'react-router-dom'
+import { HashRouter as Router, Navigate, Route, Routes } from 'react-router-dom'
 import { Error404 } from '../containers/errors/Error404'
 import { Home } from '../containers/pages/Home.jsx'
 import { Login } from '../containers/pages/Login.jsx'
@@ -25,7 +25,7 @@ const AppRouter = () => {
         />
         <Route
           path='/solicitud'
-          element={<SolicitudPage />}
+          element={<Navigate to='/postular' replace />}
         />
         <Route
           path='/adm'
