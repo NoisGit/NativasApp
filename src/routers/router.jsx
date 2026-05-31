@@ -20,6 +20,10 @@ const AppRouter = () => {
         <Route path='/registrate' element={<Registrate />} />
         <Route path='/recuperar' element={<RecoverPass />} />
         <Route
+          path='/postular'
+          element={<SolicitudPage />}
+        />
+        <Route
           path='/solicitud'
           element={<SolicitudPage />}
         />
