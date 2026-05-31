@@ -18,8 +18,9 @@ const initialForm = {
 const applicationEndpoint = import.meta.env.VITE_APPLICATION_FORM_ENDPOINT
 const availabilityOptions = ['Martes', 'Jueves', 'Domingo']
 
-const fieldClass = 'rounded-2xl border border-nativas-border bg-nativas-deep-blue px-4 py-3 text-white outline-none transition placeholder:text-nativas-mist/55 focus:border-nativas-turquoise focus:ring-2 focus:ring-nativas-turquoise/25'
+const fieldClass = 'rounded-2xl border border-nativas-border bg-nativas-deep-blue px-4 py-3 text-white outline-none transition focus:border-nativas-turquoise focus:ring-2 focus:ring-nativas-turquoise/25'
 const panelClass = 'rounded-[1.75rem] border border-nativas-border bg-nativas-night-soft p-5 sm:rounded-[2rem] sm:p-6'
+const helpTextClass = 'text-xs font-medium leading-5 text-nativas-mist/70'
 
 const getAge = (birthDate) => {
   const today = new Date()
@@ -216,19 +217,19 @@ export function FormularioSolicitud () {
                       value={form.fullName}
                       onChange={(event) => updateField('fullName', event.target.value)}
                       className={fieldClass}
-                      placeholder='Ej: Camila Rojas'
+                      autoComplete='name'
                       required
                     />
                   </label>
 
                   <label className='grid gap-2 text-sm font-bold text-white'>
-                    Correo
+                    Correo electrónico
                     <input
                       type='email'
                       value={form.email}
                       onChange={(event) => updateField('email', event.target.value)}
                       className={fieldClass}
-                      placeholder='correo@ejemplo.cl'
+                      autoComplete='email'
                       required
                     />
                   </label>
@@ -246,12 +247,14 @@ export function FormularioSolicitud () {
                         type='tel'
                         value={form.phone}
                         onChange={(event) => updateField('phone', event.target.value.replace(/\D/g, '').slice(0, 8))}
-                        className='min-w-0 flex-1 bg-transparent px-4 py-3 text-white outline-none placeholder:text-nativas-mist/55'
-                        placeholder='12345678'
+                        className='min-w-0 flex-1 bg-transparent px-4 py-3 text-white outline-none'
+                        autoComplete='tel-national'
+                        inputMode='numeric'
                         maxLength='8'
                         required
                       />
                     </div>
+                    <span className={helpTextClass}>Ingresa 8 dígitos. El prefijo +569 ya está incluido.</span>
                   </label>
 
                   <label className='grid gap-2 text-sm font-bold text-white'>
@@ -261,6 +264,7 @@ export function FormularioSolicitud () {
                       value={form.birthDate}
                       onChange={(event) => updateField('birthDate', event.target.value)}
                       className={fieldClass}
+                      autoComplete='bday'
                       required
                     />
                   </label>
@@ -302,14 +306,14 @@ export function FormularioSolicitud () {
                 </fieldset>
 
                 <label className='grid gap-2 text-sm font-bold text-white'>
-                  ¿Por qué quieres unirte?
+                  Motivación para postular
                   <textarea
                     value={form.message}
                     onChange={(event) => updateField('message', event.target.value)}
                     className={`${fieldClass} min-h-[150px] resize-y sm:min-h-[180px]`}
-                    placeholder='Cuéntanos qué te motiva a postular.'
                     required
                   />
+                  <span className={helpTextClass}>Cuéntanos brevemente qué te motiva a sumarte al equipo.</span>
                 </label>
 
                 <label className='flex gap-3 rounded-2xl border border-nativas-border bg-nativas-deep-blue p-4 text-sm leading-6 text-nativas-mist'>
