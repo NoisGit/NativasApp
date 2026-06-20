@@ -2,7 +2,7 @@
 
 ## Identidad
 
-Usar logos oficiales locales sin redibujar, deformar, recolorear ni reemplazar por iniciales. Las variantes viven en `src/assets/brand/`.
+Usar logos oficiales locales sin redibujar, deformar, recolorear ni reemplazar por iniciales. Las variantes viven en `src/assets/brand/`. El logo principal actual se obtuvo desde la captura de Instagram aportada para este trabajo y se mantiene como raster.
 
 ## Paleta
 
@@ -32,7 +32,7 @@ Botones con estados hover/focus visibles, altura táctil mínima de `44px`, icon
 
 ## Fotografía y galería
 
-Usar imágenes locales verificables, sin hotlinking a Instagram. Cada tarjeta debe tener `alt`, permalink original cuando esté confirmado y enlace externo seguro.
+Usar imágenes locales verificables, sin hotlinking a Instagram. Cada tarjeta debe tener `alt`, permalink original cuando esté confirmado y enlace externo seguro. No usar fotos genéricas de Google ni de otros equipos para representar a Nativas.
 
 ## Formulario
 
@@ -48,7 +48,7 @@ Cumplir WCAG AA razonable: contraste, foco visible, landmarks, skip link, headin
 
 ## Animaciones
 
-Usar CSS y APIs del navegador. Respetar `prefers-reduced-motion`. El carrusel pausa con hover, foco y pestaña oculta.
+Usar GSAP por npm para secuencias y scroll motion, con `@gsap/react`, scopes y cleanup. Respetar `prefers-reduced-motion`. El carrusel pausa con hover, foco y pestaña oculta.
 
 ## Instagram
 

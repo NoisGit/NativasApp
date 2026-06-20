@@ -29,6 +29,7 @@ No existe base de datos, backend propio, autenticación ni panel administrativo.
 - Tailwind CSS
 - React Router
 - Lucide React
+- GSAP + @gsap/react
 - Vitest
 - React Testing Library
 - Playwright
@@ -122,6 +123,8 @@ Para actualizar una publicación:
 
 La sección no es un feed en vivo y no usa Instagram Graph API porque este sitio se despliega como frontend estático.
 
+Los assets actuales se generaron localmente desde la captura de Instagram aportada para este trabajo. Las descargas públicas automatizadas desde Instagram fueron bloqueadas por `403`, por lo que no se incorporaron imágenes de Google, Flickr ni otros equipos como reemplazo.
+
 ## Logos e identidad
 
 Los logos locales están en:
@@ -130,10 +133,10 @@ Los logos locales están en:
 src/assets/brand/nativas-logo-primary.png
 src/assets/brand/nativas-logo-symbol.png
 public/favicon.png
-public/og-image.png
+public/og-image.jpg
 ```
 
-No se usa una “N” provisional ni un logo inventado. Si se obtiene una variante oficial adicional, se reemplaza en `src/assets/brand/` sin cambiar componentes.
+No se usa una “N” provisional ni un logo inventado. El logo principal actual proviene de la captura oficial aportada y se conserva como raster. Si se obtiene una variante oficial adicional, se reemplaza en `src/assets/brand/` sin cambiar componentes.
 
 ## Seguridad frontend
 
@@ -147,6 +150,10 @@ No se usa una “N” provisional ni un logo inventado. Si se obtiene una varian
 - Fetch con `AbortController` y timeout.
 - CSP y referrer policy en `index.html`.
 - GitHub Pages no permite configurar encabezados HTTP como `frame-ancestors`; el proyecto aplica la CSP posible mediante meta tag.
+
+## Motion
+
+Las animaciones usan GSAP instalado por npm, no CDN. La capa de motion está en `src/presentation/hooks/useGsapLandingMotion.ts` y utiliza `@gsap/react`, `ScrollTrigger`, scopes por ref, cleanup automático, transforms/opacity y `prefers-reduced-motion`.
 
 ## Accesibilidad
 

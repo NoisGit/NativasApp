@@ -1,16 +1,19 @@
 import type { InstagramPost } from '../../domain/instagram/instagramPost'
-import postSymbol from '../../assets/instagram/nativas-post-01.png'
-import postLogo from '../../assets/instagram/nativas-post-02.png'
-import postProfile from '../../assets/instagram/nativas-post-03.png'
-import trainingImage from '../../assets/gallery/nativas-training.jpg'
-import heroImage from '../../assets/gallery/nativas-hero.jpg'
+import teamWide from '../../assets/instagram/nativas-post-team-wide.jpg'
+import teamLeft from '../../assets/instagram/nativas-post-team-left.jpg'
+import teamRight from '../../assets/instagram/nativas-post-team-right.jpg'
+import logoClose from '../../assets/instagram/nativas-post-logo-close.jpg'
+import wordmark from '../../assets/instagram/nativas-post-wordmark.jpg'
+import symbol from '../../assets/instagram/nativas-post-symbol.jpg'
+import community from '../../assets/instagram/nativas-post-community.jpg'
+import southTexture from '../../assets/instagram/nativas-post-south-texture.jpg'
 
 const posts: InstagramPost[] = [
   {
     id: 'post-power-trio',
     title: 'Power trio en la pista',
     description: 'Publicación oficial sobre compañeras de Nativas vinculadas a entrenamientos y selección.',
-    image: trainingImage,
+    image: teamWide,
     permalink: 'https://www.instagram.com/nativas_rollerderby/p/DE5KXoiRp7R/',
     mediaType: 'image',
     alt: 'Patinadoras de roller derby durante una instancia de entrenamiento'
@@ -19,7 +22,7 @@ const posts: InstagramPost[] = [
     id: 'post-amor-derby-2',
     title: 'Amor por el Derby',
     description: 'Encuentro derby en el sur con Nativas y equipos invitados.',
-    image: heroImage,
+    image: teamLeft,
     permalink: 'https://www.instagram.com/p/DUtE_nvEQFj/',
     mediaType: 'image',
     alt: 'Equipo de roller derby en una pista durante actividad deportiva'
@@ -28,7 +31,7 @@ const posts: InstagramPost[] = [
     id: 'post-amor-derby-1',
     title: 'Partido en Temuco',
     description: 'Actividad deportiva difundida por Nativas para la comunidad derby.',
-    image: trainingImage,
+    image: teamRight,
     permalink: 'https://www.instagram.com/p/DUrlQh_kTzg/',
     mediaType: 'image',
     alt: 'Escena de patinaje y estrategia de equipo'
@@ -37,7 +40,7 @@ const posts: InstagramPost[] = [
     id: 'post-araucania-derby',
     title: 'Derby en La Araucanía',
     description: 'Convocatoria pública a una jornada de roller derby en el sur.',
-    image: heroImage,
+    image: community,
     permalink: 'https://www.instagram.com/p/DUlgfgbkeG9/',
     mediaType: 'image',
     alt: 'Patinadoras reunidas en una pista de la zona sur'
@@ -46,7 +49,7 @@ const posts: InstagramPost[] = [
     id: 'post-nativas-logo',
     title: 'Identidad Nativas',
     description: 'Branding oficial utilizado como referencia visual del equipo.',
-    image: postSymbol,
+    image: logoClose,
     permalink: 'https://www.instagram.com/nativas_rollerderby/',
     mediaType: 'image',
     alt: 'Símbolo gráfico oficial de Nativas Roller Derby'
@@ -55,7 +58,7 @@ const posts: InstagramPost[] = [
     id: 'post-comunidad',
     title: 'Comunidad sobre ruedas',
     description: 'Registro editorial local para representar comunidad, aprendizaje y constancia.',
-    image: postLogo,
+    image: wordmark,
     permalink: 'https://www.instagram.com/p/C8Pg2-fu_XT/',
     mediaType: 'image',
     alt: 'Logo oficial de Nativas usado como tarjeta de comunidad'
@@ -64,7 +67,7 @@ const posts: InstagramPost[] = [
     id: 'post-temuco',
     title: 'Desde Temuco',
     description: 'Contenido público asociado a Nativas y su identidad territorial.',
-    image: postProfile,
+    image: symbol,
     permalink: 'https://www.instagram.com/p/C8UnuISOhm3/',
     mediaType: 'image',
     alt: 'Imagen de perfil oficial asociada a Nativas Roller Derby'
@@ -73,7 +76,7 @@ const posts: InstagramPost[] = [
     id: 'post-roller-derby',
     title: 'Roller derby en movimiento',
     description: 'Selección editorial de actividad y cultura derby enlazada al Instagram oficial.',
-    image: trainingImage,
+    image: southTexture,
     permalink: 'https://www.instagram.com/p/DE74ZlYxQS-/',
     mediaType: 'image',
     alt: 'Patinadora avanzando durante una sesión deportiva'

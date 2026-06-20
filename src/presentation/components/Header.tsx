@@ -1,7 +1,7 @@
 import { Menu, X } from 'lucide-react'
 import { useEffect, useId, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import logo from '../../assets/brand/nativas-logo-primary.png'
+import logo from '../../assets/brand/nativas-logo-symbol.webp'
 import { siteConfig } from '../../shared/config/siteConfig'
 
 function scrollToSection (hash: string) {
@@ -40,7 +40,7 @@ export function Header () {
     <header className='site-header'>
       <div className='site-header__inner'>
         <button className='brand-link' onClick={() => goTo('inicio')} aria-label='Ir al inicio'>
-          <img src={logo} alt='Nativas Roller Derby' width='300' height='70' />
+          <img src={logo} alt='Nativas Roller Derby' width='620' height='655' />
         </button>
 
         <nav className='desktop-nav' aria-label='Navegación principal'>
