@@ -25,6 +25,7 @@ Live site: <https://noisgit.github.io/NativasApp/>
 - GSAP + ScrollTrigger
 - React Router with HashRouter for GitHub Pages compatibility
 - react-phone-number-input + libphonenumber-js
+- react-day-picker
 - Vitest + React Testing Library
 - Playwright
 - GitHub Actions
@@ -107,7 +108,6 @@ The application form asks for:
 - email;
 - international phone number;
 - birth date;
-- city or comuna;
 - optional pronouns;
 - prior experience;
 - training availability;
@@ -170,7 +170,7 @@ GSAP is used through React-scoped hooks. Motion includes hero reveal, image scal
 
 ## Testing
 
-Coverage includes domain validation, form behavior, phone normalization, pronouns, header/footer navigation, carousel behavior, reduced motion, horizontal overflow checks, and README preview dimensions.
+Coverage includes domain validation, form behavior, phone normalization, pronouns, header/footer navigation, continuous carousel behavior, reduced motion, date picker behavior, horizontal overflow checks, and README preview dimensions.
 
 Run everything before release:
 

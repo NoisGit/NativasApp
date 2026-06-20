@@ -71,54 +71,78 @@ test('footer section links work from internal routes and Instagram link is safe'
   expect(consoleErrors).toEqual([])
 })
 
-test('instagram carousel loops horizontally and keeps vertical scroll position stable', async ({ page }) => {
+test('instagram carousel moves continuously, pauses accessibly and keeps vertical scroll stable', async ({ page }) => {
   const consoleErrors = watchConsoleErrors(page)
 
   await page.goto('/')
   await page.locator('#instagram').scrollIntoViewIfNeeded()
   await expect(page.locator('#instagram')).toBeInViewport()
-  await page.waitForTimeout(700)
+  await page.waitForTimeout(800)
   const instagram = page.getByRole('link', { name: /Abrir publicación en Instagram/i }).first()
   await expect(instagram).toHaveAttribute('href', /https:\/\/(www\.)?instagram\.com\//)
 
+  const track = page.getByTestId('instagram-marquee-track')
   const beforeY = await page.evaluate(() => window.scrollY)
-  const carousel = page.locator('.carousel')
-  const beforeIndex = await carousel.getAttribute('data-carousel-index')
-  await page.waitForTimeout(5600)
-  const afterIndex = await carousel.getAttribute('data-carousel-index')
+  const firstX = await track.evaluate((element) => element.getBoundingClientRect().x)
+  await page.waitForTimeout(700)
+  const secondX = await track.evaluate((element) => element.getBoundingClientRect().x)
+  await page.waitForTimeout(700)
+  const thirdX = await track.evaluate((element) => element.getBoundingClientRect().x)
   const afterY = await page.evaluate(() => window.scrollY)
 
-  expect(afterIndex).not.toBe(beforeIndex)
+  expect(secondX).toBeLessThan(firstX - 4)
+  expect(thirdX).toBeLessThan(secondX - 4)
   expect(Math.abs(afterY - beforeY)).toBeLessThanOrEqual(3)
 
-  const seen = new Set<string>()
-  for (let i = 0; i < 7; i += 1) {
-    const clickY = await page.evaluate(() => window.scrollY)
-    await page.getByRole('button', { name: /Ver publicación siguiente/i }).click({ force: true })
-    await page.waitForTimeout(120)
-    seen.add(await carousel.getAttribute('data-carousel-index') || '')
-    expect(Math.abs((await page.evaluate(() => window.scrollY)) - clickY)).toBeLessThanOrEqual(3)
-  }
-  expect(seen.size).toBeGreaterThan(2)
+  await page.locator('.carousel').hover()
+  await page.waitForTimeout(500)
+  const pausedX = await track.evaluate((element) => element.getBoundingClientRect().x)
+  await page.waitForTimeout(500)
+  const pausedAgainX = await track.evaluate((element) => element.getBoundingClientRect().x)
+  expect(Math.abs(pausedAgainX - pausedX)).toBeLessThanOrEqual(2)
+
+  await page.mouse.move(20, 20)
+  await page.waitForTimeout(650)
+  const resumedX = await track.evaluate((element) => element.getBoundingClientRect().x)
+  expect(resumedX).toBeLessThan(pausedAgainX - 3)
+
+  await instagram.focus()
+  await page.waitForTimeout(400)
+  const focusPausedX = await track.evaluate((element) => element.getBoundingClientRect().x)
+  await page.waitForTimeout(450)
+  const focusPausedAgainX = await track.evaluate((element) => element.getBoundingClientRect().x)
+  expect(Math.abs(focusPausedAgainX - focusPausedX)).toBeLessThanOrEqual(2)
+
+  await page.getByRole('button', { name: 'Inicio' }).first().focus()
+  await page.waitForTimeout(650)
+  const focusResumedX = await track.evaluate((element) => element.getBoundingClientRect().x)
+  expect(focusResumedX).toBeLessThan(focusPausedAgainX - 3)
+
+  const hiddenCloneLinks = await page.locator('.carousel__group[aria-hidden="true"] .instagram-card').evaluateAll((links) => links.map((link) => ({ tabIndex: (link as HTMLAnchorElement).tabIndex, hidden: link.closest('.carousel__group')?.getAttribute('aria-hidden') })))
+  expect(hiddenCloneLinks.length).toBeGreaterThan(0)
+  expect(hiddenCloneLinks.every((link) => link.tabIndex === -1 && link.hidden === 'true')).toBe(true)
   expect(consoleErrors).toEqual([])
 })
 
 test.describe('reduced motion', () => {
-  test('keeps content visible and disables carousel autoplay', async ({ page }) => {
+  test('keeps content visible and leaves the marquee static', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' })
     const consoleErrors = watchConsoleErrors(page)
     await page.goto('/')
     await expect(page.getByRole('heading', { name: /Patinaje, estrategia/i })).toBeVisible()
     await page.locator('#instagram').scrollIntoViewIfNeeded()
     const carousel = page.locator('.carousel')
-    const beforeIndex = await carousel.getAttribute('data-carousel-index')
-    await page.waitForTimeout(5600)
-    await expect(carousel).toHaveAttribute('data-carousel-index', beforeIndex || '0')
+    const track = page.getByTestId('instagram-marquee-track')
+    await expect(carousel).toHaveAttribute('data-marquee-paused', 'true')
+    const beforeX = await track.evaluate((element) => element.getBoundingClientRect().x)
+    await page.waitForTimeout(900)
+    const afterX = await track.evaluate((element) => element.getBoundingClientRect().x)
+    expect(Math.abs(afterX - beforeX)).toBeLessThanOrEqual(1)
     expect(consoleErrors).toEqual([])
   })
 })
 
-test('form layout works on mobile and desktop without contact preference', async ({ page }) => {
+test('form layout works on mobile and desktop without city, placeholders or contact preference', async ({ page }) => {
   const consoleErrors = watchConsoleErrors(page)
 
   await page.goto('/#/postular')
@@ -126,13 +150,52 @@ test('form layout works on mobile and desktop without contact preference', async
   await expect(page.getByRole('heading', { name: 'Postula a Nativas' })).toBeVisible()
   await expect(page.getByLabel('Teléfono')).toBeVisible()
   await expect(page.getByLabel(/Preferencia de contacto/i)).toHaveCount(0)
+  await expect(page.getByLabel(/Ciudad o comuna/i)).toHaveCount(0)
   await expectNoHorizontalScroll(page)
 
   await page.setViewportSize({ width: 1280, height: 900 })
   await expect(page.getByLabel('Teléfono')).toBeVisible()
+  await expect(page.locator('input[placeholder]')).toHaveCount(0)
+  await expect(page.locator('textarea[placeholder]')).toHaveCount(1)
+
+  const heights = await page.evaluate(() => {
+    const ids = ['email', 'birthDate', 'phone', 'pronouns', 'experience']
+    return ids.map((id) => Math.round(document.getElementById(id)?.getBoundingClientRect().height || 0))
+  })
+  expect(new Set(heights).size).toBe(1)
+  expect(heights[0]).toBeGreaterThanOrEqual(46)
+  expect(heights[0]).toBeLessThanOrEqual(50)
+
   await page.getByLabel('Pronombres').selectOption('Otro')
   await expect(page.getByLabel(/Cómo prefieres/i)).toBeVisible()
   await expectNoHorizontalScroll(page)
+  expect(consoleErrors).toEqual([])
+})
+
+test('birth date picker opens, navigates, selects and closes accessibly', async ({ page }) => {
+  const consoleErrors = watchConsoleErrors(page)
+
+  await page.goto('/#/postular')
+  const trigger = page.getByRole('button', { name: /Fecha de nacimiento/i })
+  await trigger.click()
+  const dialog = page.getByRole('dialog', { name: /Seleccionar fecha de nacimiento/i })
+  await expect(dialog).toBeVisible()
+
+  const dropdowns = dialog.getByRole('combobox')
+  await dropdowns.nth(0).selectOption({ label: 'mayo' })
+  await dropdowns.nth(1).selectOption('1994')
+  await dialog.getByRole('button', { name: /20/ }).click()
+  await expect(dialog).toHaveCount(0)
+  await expect(trigger).toContainText('20 de mayo de 1994')
+
+  await trigger.click()
+  await page.keyboard.press('Escape')
+  await expect(dialog).toHaveCount(0)
+
+  await trigger.click()
+  const yearOptions = await dropdowns.nth(1).locator('option').allTextContents()
+  expect(yearOptions).not.toContain(String(new Date().getFullYear()))
+  expect(yearOptions).toContain(String(new Date().getFullYear() - 18))
   expect(consoleErrors).toEqual([])
 })
 

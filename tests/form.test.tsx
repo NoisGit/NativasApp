@@ -1,8 +1,18 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { App } from '../src/App'
 import { siteConfig } from '../src/shared/config/siteConfig'
+
+
+async function selectBirthDate (user: ReturnType<typeof userEvent.setup>) {
+  await user.click(screen.getByRole('button', { name: /Fecha de nacimiento/i }))
+  const dialog = screen.getByRole('dialog', { name: /Seleccionar fecha de nacimiento/i })
+  const dropdowns = within(dialog).getAllByRole('combobox')
+  await user.selectOptions(dropdowns[0], '4')
+  await user.selectOptions(dropdowns[1], '1994')
+  await user.click(within(dialog).getByRole('button', { name: /20/ }))
+}
 
 async function goToForm () {
   const user = userEvent.setup()
@@ -15,7 +25,7 @@ async function fillValidForm (user: ReturnType<typeof userEvent.setup>) {
   await user.type(screen.getByLabelText(/Nombre completo/i), 'Persona Postulante')
   await user.type(screen.getByLabelText(/Correo/i), 'persona@mail.cl')
   await user.type(screen.getByLabelText(/Teléfono/i), '912345678')
-  await user.type(screen.getByLabelText(/Fecha de nacimiento/i), '1994-05-20')
+  await selectBirthDate(user)
   await user.selectOptions(screen.getByLabelText(/Pronombres/i), 'Otro')
   await user.type(screen.getByLabelText(/Cómo prefieres/i), 'Nativa')
   await user.selectOptions(screen.getByLabelText(/Experiencia previa/i), 'Sin experiencia')
@@ -37,6 +47,7 @@ describe('application form', () => {
     expect(screen.getByLabelText(/Nombre completo/i)).toHaveFocus()
     expect(screen.getByText(/Cuéntanos un poco más/i)).toBeInTheDocument()
     expect(screen.queryByLabelText(/Preferencia de contacto/i)).not.toBeInTheDocument()
+    expect(screen.queryByLabelText(/Ciudad o comuna/i)).not.toBeInTheDocument()
   })
 
   it('updates the motivation counter and links privacy', async () => {
@@ -65,6 +76,7 @@ describe('application form', () => {
     expect(body.phone).toBe('+56912345678')
     expect(body.pronouns).toBe('Nativa')
     expect(body).not.toHaveProperty('contactPreference')
+    expect(body).not.toHaveProperty('city')
     expect(await screen.findByRole('heading', { name: /Postulación enviada/i })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Nueva postulación/i })).toBeInTheDocument()
   })
@@ -77,5 +89,17 @@ describe('application form', () => {
     await user.click(screen.getByRole('button', { name: /Enviar postulación/i }))
     expect(await screen.findByText(/No pudimos enviar la postulación/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/Nombre completo/i)).toHaveValue('Persona Postulante')
+  })
+
+
+  it('opens the birth date picker, selects a valid date and closes with Escape', async () => {
+    const user = await goToForm()
+    const trigger = screen.getByRole('button', { name: /Fecha de nacimiento/i })
+    await user.click(trigger)
+    expect(screen.getByRole('dialog', { name: /Seleccionar fecha de nacimiento/i })).toBeInTheDocument()
+    await user.keyboard('{Escape}')
+    expect(screen.queryByRole('dialog', { name: /Seleccionar fecha de nacimiento/i })).not.toBeInTheDocument()
+    await selectBirthDate(user)
+    expect(trigger).toHaveTextContent(/20 de mayo de 1994/i)
   })
 })

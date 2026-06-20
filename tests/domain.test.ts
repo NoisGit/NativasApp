@@ -7,7 +7,6 @@ const validForm = {
   email: 'PERSONA@MAIL.CL',
   phone: '9 1234 5678',
   birthDate: '1994-05-20',
-  city: 'Temuco',
   pronouns: '',
   pronounsOther: '',
   experience: 'Sin experiencia',
@@ -37,6 +36,7 @@ describe('application domain', () => {
     expect(result.data?.email).toBe('persona@mail.cl')
     expect(result.data?.phone).toBe('+56912345678')
     expect(result.data).not.toHaveProperty('contactPreference')
+    expect(result.data).not.toHaveProperty('city')
   })
 
   it('accepts pronouns and normalizes the custom option', () => {

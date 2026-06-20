@@ -8,7 +8,7 @@ export function PrivacyPage () {
   return (
     <section className='legal-page'>
       <h1>Privacidad</h1>
-      <p>Este sitio solicita datos para gestionar una postulación a Nativas Roller Derby: nombre, correo, teléfono, fecha de nacimiento, ciudad o comuna opcional, pronombres opcionales, experiencia, disponibilidad y motivación.</p>
+      <p>Este sitio solicita datos para gestionar una postulación a Nativas Roller Derby: nombre, correo, teléfono, fecha de nacimiento, pronombres opcionales, experiencia, disponibilidad y motivación.</p>
       <p>La información se utiliza para revisar tu interés, entender tu disponibilidad y coordinar los siguientes pasos con el equipo.</p>
       <p>No envíes datos sensibles innecesarios. Enviar el formulario no garantiza incorporación ni cupo.</p>
       <p>Para solicitar corrección o eliminación de información enviada, utiliza el canal oficial indicado por el equipo. El Instagram público de referencia es <a href={siteConfig.instagramUrl} target='_blank' rel='noopener noreferrer'>@nativas_rollerderby</a>.</p>

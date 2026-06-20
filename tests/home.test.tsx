@@ -6,7 +6,7 @@ import { App } from '../src/App'
 describe('home interactions', () => {
   it('renders the official logo only in the header, navigation, CTA and footer Instagram link', () => {
     render(<App />)
-    expect(screen.getAllByAltText('Nativas Roller Derby')).toHaveLength(1)
+    expect(screen.getAllByAltText('Nativas Roller Derby')).toHaveLength(2)
     expect(screen.getByRole('heading', { name: /Patinaje, estrategia/i })).toBeInTheDocument()
     expect(screen.getAllByRole('link', { name: /Postula/i })[0]).toHaveAttribute('href', '#/postular')
 
@@ -53,23 +53,48 @@ describe('home interactions', () => {
     expect(button).toHaveAttribute('aria-expanded', 'false')
   })
 
-  it('renders Instagram cards with safe external links, hidden clones and carousel controls', async () => {
-    const user = userEvent.setup()
-    const { container } = render(<App />)
-    const links = screen.getAllByRole('link', { name: /Abrir publicación en Instagram/i })
-    expect(links.length).toBeGreaterThanOrEqual(5)
-    links.forEach((link) => {
-      expect(link).toHaveAttribute('target', '_blank')
-      expect(link).toHaveAttribute('rel', 'noopener noreferrer')
-      expect(link.getAttribute('href')).toMatch(/^https:\/\/(www\.)?instagram\.com\//)
+  it('renders Instagram cards with safe external links, hidden clones and marquee pause control', async () => {
+    const originalMatchMedia = window.matchMedia
+    Object.defineProperty(window, 'matchMedia', {
+      writable: true,
+      value: (query: string) => ({
+        matches: false,
+        media: query,
+        onchange: null,
+        addEventListener: () => undefined,
+        removeEventListener: () => undefined,
+        addListener: () => undefined,
+        removeListener: () => undefined,
+        dispatchEvent: () => false
+      })
     })
+    const user = userEvent.setup()
+    const { container, unmount } = render(<App />)
 
-    const hiddenCloneLinks = container.querySelectorAll('.carousel__slide[aria-hidden="true"] .instagram-card[tabindex="-1"]')
-    expect(hiddenCloneLinks.length).toBeGreaterThan(0)
+    try {
+      const links = container.querySelectorAll<HTMLAnchorElement>('.carousel__group:not([aria-hidden]) .instagram-card')
+      expect(links.length).toBeGreaterThanOrEqual(5)
+      links.forEach((link) => {
+        expect(link).toHaveAttribute('target', '_blank')
+        expect(link).toHaveAttribute('rel', 'noopener noreferrer')
+        expect(link).toHaveAttribute('aria-label', expect.stringMatching(/Abrir publicación en Instagram/i))
+        expect(link.getAttribute('href')).toMatch(/^https:\/\/(www\.)?instagram\.com\//)
+      })
 
-    await user.click(screen.getByRole('button', { name: /Ver publicación siguiente/i }))
-    await user.click(screen.getByRole('button', { name: /Ver publicación anterior/i }))
-    await user.click(screen.getByRole('button', { name: /Ver publicación 2 de/i }))
+      const hiddenCloneLinks = container.querySelectorAll('.carousel__group[aria-hidden="true"] .instagram-card[tabindex="-1"]')
+      expect(hiddenCloneLinks.length).toBeGreaterThan(0)
+
+      const pause = screen.getByRole('button', { name: /Pausar carrusel/i })
+      expect(pause).toHaveAttribute('aria-pressed', 'false')
+      await user.click(pause)
+      await waitFor(() => expect(screen.getByRole('button', { name: /Reanudar carrusel/i })).toHaveAttribute('aria-pressed', 'true'))
+    } finally {
+      unmount()
+      Object.defineProperty(window, 'matchMedia', {
+        writable: true,
+        value: originalMatchMedia
+      })
+    }
   })
 
   it('shows training cards without invented tags', () => {

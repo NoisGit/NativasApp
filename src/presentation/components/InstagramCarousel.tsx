@@ -1,140 +1,120 @@
-import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import type { CSSProperties, FocusEvent, KeyboardEvent } from 'react'
+import { Pause, Play } from 'lucide-react'
+import gsap from 'gsap'
+import { useGSAP } from '@gsap/react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import type { FocusEvent } from 'react'
 import { GetInstagramPosts } from '../../application/instagram-gallery/GetInstagramPosts'
 import { instagramPostsRepository } from '../../infrastructure/content/instagramPostsRepository'
 import { siteConfig } from '../../shared/config/siteConfig'
 import { InstagramGlyph } from './InstagramGlyph'
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
 
-type RenderedPost = ReturnType<typeof instagramPostsRepository.getAll>[number] & { cloneId: string, sourceIndex: number, isClone: boolean }
+gsap.registerPlugin(useGSAP)
 
-function getVisibleCount () {
-  if (typeof window === 'undefined') return 1
-  if (window.innerWidth < 620) return 1
-  if (window.innerWidth < 980) return 2
-  return 3
+const MARQUEE_SPEED_PX_PER_SECOND = 34
+
+type InstagramPost = ReturnType<typeof instagramPostsRepository.getAll>[number]
+
+function InstagramCard ({ post, clone, eager }: { post: InstagramPost, clone?: boolean, eager?: boolean }) {
+  return (
+    <a
+      className='instagram-card'
+      href={post.permalink}
+      target='_blank'
+      rel='noopener noreferrer'
+      tabIndex={clone ? -1 : undefined}
+      aria-label={`${post.title}. Abrir publicación en Instagram`}
+    >
+      <img src={post.image} alt={post.alt} loading={eager ? 'eager' : 'lazy'} decoding='async' width='640' height='480' />
+      <span className='instagram-card__body'>
+        <strong><InstagramGlyph size={18} /> {post.title}</strong>
+        <span>{post.description}</span>
+      </span>
+    </a>
+  )
 }
 
 export function InstagramCarousel () {
   const posts = useMemo(() => new GetInstagramPosts(instagramPostsRepository).execute(), [])
-  const [position, setPosition] = useState(posts.length)
-  const [visibleCount, setVisibleCount] = useState(getVisibleCount)
-  const [stepWidth, setStepWidth] = useState(0)
-  const [paused, setPaused] = useState(false)
-  const [hidden, setHidden] = useState(() => document.hidden)
-  const [withTransition, setWithTransition] = useState(true)
   const reducedMotion = usePrefersReducedMotion()
-  const touchStart = useRef<number | null>(null)
-  const viewportRef = useRef<HTMLDivElement>(null)
-  const trackRef = useRef<HTMLDivElement>(null)
-  const hasOverflow = posts.length > visibleCount
-  const currentIndex = posts.length ? ((position % posts.length) + posts.length) % posts.length : 0
+  const rootRef = useRef<HTMLDivElement | null>(null)
+  const trackRef = useRef<HTMLDivElement | null>(null)
+  const firstGroupRef = useRef<HTMLDivElement | null>(null)
+  const tweenRef = useRef<gsap.core.Tween | null>(null)
+  const [manualPaused, setManualPaused] = useState(false)
+  const [hoverPaused, setHoverPaused] = useState(false)
+  const [focusPaused, setFocusPaused] = useState(false)
+  const [hidden, setHidden] = useState(() => document.hidden)
+  const canMove = posts.length > 1 && !reducedMotion
+  const isPaused = manualPaused || hoverPaused || focusPaused || hidden || reducedMotion
 
-  const renderedPosts = useMemo<RenderedPost[]>(() => {
-    if (!hasOverflow) {
-      return posts.map((post, index) => ({ ...post, cloneId: `single-${post.id}`, sourceIndex: index, isClone: false }))
-    }
-
-    return [
-      ...posts.map((post, index) => ({ ...post, cloneId: `before-${post.id}`, sourceIndex: index, isClone: true })),
-      ...posts.map((post, index) => ({ ...post, cloneId: `main-${post.id}`, sourceIndex: index, isClone: false })),
-      ...posts.map((post, index) => ({ ...post, cloneId: `after-${post.id}`, sourceIndex: index, isClone: true }))
-    ]
-  }, [hasOverflow, posts])
-
-  const measure = () => {
-    const viewport = viewportRef.current
-    const track = trackRef.current
-    const firstSlide = track?.querySelector<HTMLElement>('.carousel__slide')
-    const styles = track ? window.getComputedStyle(track) : null
-    const gap = styles ? Number.parseFloat(styles.columnGap || styles.gap || '0') || 0 : 0
-    const width = firstSlide?.getBoundingClientRect().width || (viewport?.clientWidth ? viewport.clientWidth / visibleCount : 0)
-    setStepWidth(width + gap)
+  const applyPlayback = (paused: boolean, duration = 0.35) => {
+    const tween = tweenRef.current
+    if (!tween) return
+    gsap.to(tween, { timeScale: paused ? 0 : 1, duration, ease: 'power2.out' })
   }
 
-  useLayoutEffect(() => {
-    const updateLayout = () => {
-      setVisibleCount(getVisibleCount())
-      window.requestAnimationFrame(measure)
-    }
+  const rebuildMarquee = () => {
+    const track = trackRef.current
+    const firstGroup = firstGroupRef.current
+    if (!track || !firstGroup || !canMove) return
 
-    updateLayout()
+    tweenRef.current?.kill()
+    gsap.set(track, { x: 0 })
 
-    const viewport = viewportRef.current
-    const observer = typeof ResizeObserver !== 'undefined' && viewport ? new ResizeObserver(updateLayout) : null
-    if (observer && viewport) observer.observe(viewport)
-    window.addEventListener('resize', updateLayout, { passive: true })
+    const distance = firstGroup.scrollWidth
+    if (distance <= 0) return
+
+    tweenRef.current = gsap.to(track, {
+      x: -distance,
+      duration: distance / MARQUEE_SPEED_PX_PER_SECOND,
+      ease: 'none',
+      repeat: -1,
+      modifiers: {
+        x: gsap.utils.unitize((x) => Number.parseFloat(x) % distance)
+      }
+    })
+
+    tweenRef.current.timeScale(isPaused ? 0 : 1)
+  }
+
+  useGSAP(() => {
+    if (!canMove) return
+    rebuildMarquee()
+
+    const onResize = () => rebuildMarquee()
+    const observer = typeof ResizeObserver !== 'undefined' && firstGroupRef.current ? new ResizeObserver(onResize) : null
+    if (observer && firstGroupRef.current) observer.observe(firstGroupRef.current)
+    window.addEventListener('resize', onResize, { passive: true })
 
     return () => {
       observer?.disconnect()
-      window.removeEventListener('resize', updateLayout)
+      window.removeEventListener('resize', onResize)
+      tweenRef.current?.kill()
+      tweenRef.current = null
     }
-  }, [visibleCount])
+  }, { scope: rootRef, dependencies: [canMove, posts.length], revertOnUpdate: true })
 
   useEffect(() => {
-    setWithTransition(false)
-    setPosition(posts.length)
-    window.requestAnimationFrame(() => {
-      window.requestAnimationFrame(() => setWithTransition(true))
-    })
-  }, [posts.length, visibleCount])
+    applyPlayback(isPaused)
+  }, [isPaused])
 
   useEffect(() => {
-    if (!hasOverflow || reducedMotion || paused || hidden || posts.length < 2) return
-    const id = window.setInterval(() => setPosition((current) => current + 1), 5200)
-    return () => window.clearInterval(id)
-  }, [hasOverflow, hidden, paused, posts.length, reducedMotion])
+    const onVisibility = () => {
+      setHidden(document.hidden)
+    }
 
-  useEffect(() => {
-    const onVisibility = () => setHidden(document.hidden)
     document.addEventListener('visibilitychange', onVisibility)
     return () => document.removeEventListener('visibilitychange', onVisibility)
   }, [])
 
-  const jumpWithoutAnimation = (nextPosition: number) => {
-    setWithTransition(false)
-    setPosition(nextPosition)
-    window.requestAnimationFrame(() => {
-      window.requestAnimationFrame(() => setWithTransition(true))
-    })
-  }
-
-  const onTransitionEnd = () => {
-    if (!hasOverflow) return
-    if (position >= posts.length * 2) jumpWithoutAnimation(position - posts.length)
-    if (position < posts.length) jumpWithoutAnimation(position + posts.length)
-  }
-
-  const next = () => {
-    if (hasOverflow) setPosition((current) => current + 1)
-  }
-  const previous = () => {
-    if (hasOverflow) setPosition((current) => current - 1)
-  }
-  const goTo = (index: number) => {
-    if (hasOverflow) setPosition(posts.length + index)
-  }
-
-  const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    if (!hasOverflow) return
-    if (event.key === 'ArrowRight') {
-      event.preventDefault()
-      next()
-    }
-    if (event.key === 'ArrowLeft') {
-      event.preventDefault()
-      previous()
-    }
-  }
-
   const onFocusCapture = (event: FocusEvent<HTMLDivElement>) => {
-    if ((event.target as HTMLElement).closest('.instagram-card')) setPaused(true)
+    if ((event.target as HTMLElement).closest('.instagram-card')) setFocusPaused(true)
   }
 
   const onBlurCapture = (event: FocusEvent<HTMLDivElement>) => {
     const nextTarget = event.relatedTarget as HTMLElement | null
-    if (!nextTarget?.closest('.instagram-card')) setPaused(false)
+    if (!nextTarget?.closest('.instagram-card')) setFocusPaused(false)
   }
 
   return (
@@ -146,90 +126,48 @@ export function InstagramCarousel () {
       </div>
 
       <div
-        className={`carousel ${hasOverflow ? '' : 'carousel--static'}`}
-        data-carousel-index={currentIndex}
-        onMouseEnter={() => setPaused(true)}
-        onMouseLeave={() => setPaused(false)}
+        className={`carousel carousel--marquee ${canMove ? 'is-moving' : 'carousel--static'}`}
+        data-marquee-paused={isPaused || hidden || reducedMotion}
+        data-marquee-speed={MARQUEE_SPEED_PX_PER_SECOND}
+        ref={rootRef}
+        onMouseEnter={() => setHoverPaused(true)}
+        onMouseLeave={() => setHoverPaused(false)}
         onFocusCapture={onFocusCapture}
         onBlurCapture={onBlurCapture}
-        onKeyDown={onKeyDown}
       >
-        {hasOverflow && (
-          <button className='icon-button carousel__control' type='button' onClick={previous} aria-label='Ver publicación anterior'>
-            <ChevronLeft aria-hidden='true' />
-          </button>
-        )}
-
-        <div
-          className='carousel__viewport'
-          ref={viewportRef}
-          onTouchStart={(event) => { touchStart.current = event.touches[0].clientX }}
-          onTouchEnd={(event) => {
-            if (touchStart.current === null) return
-            const delta = touchStart.current - event.changedTouches[0].clientX
-            if (Math.abs(delta) > 40) {
-              if (delta > 0) next()
-              else previous()
-            }
-            touchStart.current = null
-          }}
-          tabIndex={0}
-          aria-label='Carrusel de publicaciones de Instagram'
-          style={{ '--carousel-visible': visibleCount } as CSSProperties & Record<'--carousel-visible', number>}
-        >
-          <div
-            className={`carousel__track ${withTransition && !reducedMotion ? 'is-animated' : ''}`}
-            ref={trackRef}
-            onTransitionEnd={onTransitionEnd}
-            style={{ transform: hasOverflow ? `translate3d(-${position * stepWidth}px, 0, 0)` : undefined }}
-          >
-            {renderedPosts.map((post, index) => (
-              <div
-                className='carousel__slide'
-                key={post.cloneId}
-                data-index={post.sourceIndex}
-                aria-hidden={post.isClone ? 'true' : undefined}
-              >
-                <a
-                  className='instagram-card'
-                  href={post.permalink}
-                  target='_blank'
-                  rel='noopener noreferrer'
-                  tabIndex={post.isClone ? -1 : undefined}
-                  aria-label={`${post.title}. Abrir publicación en Instagram`}
-                >
-                  <img src={post.image} alt={post.alt} loading={index <= visibleCount ? 'eager' : 'lazy'} decoding='async' width='640' height='480' />
-                  <span className='instagram-card__body'>
-                    <strong><InstagramGlyph size={18} /> {post.title}</strong>
-                    <span>{post.description}</span>
-                  </span>
-                </a>
+        <div className='carousel__viewport' aria-label='Carrusel continuo de publicaciones de Instagram'>
+          <div className='carousel__track' ref={trackRef} data-testid='instagram-marquee-track'>
+            <div className='carousel__group' ref={firstGroupRef}>
+              {posts.map((post, index) => (
+                <div className='carousel__slide' key={post.id}>
+                  <InstagramCard post={post} eager={index < 3} />
+                </div>
+              ))}
+            </div>
+            {canMove && (
+              <div className='carousel__group' aria-hidden='true'>
+                {posts.map((post) => (
+                  <div className='carousel__slide' key={`clone-${post.id}`} aria-hidden='true'>
+                    <InstagramCard post={post} clone />
+                  </div>
+                ))}
               </div>
-            ))}
+            )}
           </div>
         </div>
 
-        {hasOverflow && (
-          <button className='icon-button carousel__control' type='button' onClick={next} aria-label='Ver publicación siguiente'>
-            <ChevronRight aria-hidden='true' />
+        {canMove && (
+          <button
+            className='carousel__pause'
+            type='button'
+            aria-pressed={manualPaused}
+            onClick={() => setManualPaused((paused) => !paused)}
+          >
+            {manualPaused ? <Play size={16} aria-hidden='true' /> : <Pause size={16} aria-hidden='true' />}
+            <span>{manualPaused ? 'Reanudar carrusel' : 'Pausar carrusel'}</span>
           </button>
         )}
       </div>
-
-      {hasOverflow && (
-        <div className='carousel__dots' aria-label='Seleccionar publicación'>
-          {posts.map((post, index) => (
-            <button
-              key={post.id}
-              type='button'
-              className={currentIndex === index ? 'is-active' : ''}
-              onClick={() => goTo(index)}
-              aria-label={`Ver publicación ${index + 1} de ${posts.length}`}
-              aria-current={currentIndex === index}
-            />
-          ))}
-        </div>
-      )}
 
       <div className='section__actions'>
         <a className='button button--secondary' href={siteConfig.instagramUrl} target='_blank' rel='noopener noreferrer'>

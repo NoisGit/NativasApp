@@ -1,5 +1,6 @@
 import { ArrowUpRight, MapPin } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { siteMedia } from '../../infrastructure/content/siteMedia'
 import { siteConfig } from '../../shared/config/siteConfig'
 import { InstagramGlyph } from './InstagramGlyph'
 import { useSectionNavigation } from '../hooks/useSectionNavigation'
@@ -19,6 +20,7 @@ export function Footer () {
     <footer className='footer'>
       <div className='footer__inner'>
         <div className='footer__brand'>
+          <img src={siteMedia.logoFooter} alt='Nativas Roller Derby' width='232' height='155' />
           <h2>{siteConfig.name}</h2>
           <p>Roller derby, patinaje, estrategia y comunidad desde el sur de Chile.</p>
           <p className='footer__location'><MapPin size={18} aria-hidden='true' /> {siteConfig.location}</p>

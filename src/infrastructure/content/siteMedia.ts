@@ -1,4 +1,5 @@
-import logoHeader from '../../assets/brand/nativas-logo-header.webp'
+import logoHeader from '../../assets/brand/nativas-logo-header-horizontal.webp'
+import logoFooter from '../../assets/brand/nativas-logo-footer-horizontal.webp'
 import heroPhoto from '../../assets/media/nativas-hero.webp'
 import aboutPhoto from '../../assets/media/nativas-about.webp'
 import benchPhoto from '../../assets/instagram/nativas-bench.webp'
@@ -9,6 +10,7 @@ import unidasPhoto from '../../assets/instagram/nativas-unidas.webp'
 
 export const siteMedia = {
   logoHeader,
+  logoFooter,
   heroPhoto,
   aboutPhoto,
   instagram: {

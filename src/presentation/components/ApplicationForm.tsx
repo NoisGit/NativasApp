@@ -18,13 +18,13 @@ import {
   MissingFormEndpointError
 } from '../../infrastructure/form/HttpApplicationSubmissionGateway'
 import { siteConfig } from '../../shared/config/siteConfig'
+import { BirthDatePicker } from './BirthDatePicker'
 
 const initialForm = (): ApplicationFormInput => ({
   fullName: '',
   email: '',
   phone: '',
   birthDate: '',
-  city: '',
   pronouns: '',
   pronounsOther: '',
   experience: '',
@@ -144,15 +144,22 @@ export function ApplicationForm () {
 
       <div className='form-grid'>
         <Field className='field--full' label='Nombre completo' name='fullName' error={errors.fullName} hint='Como prefieres que te identifiquemos.'>
-          <input id='fullName' name='fullName' autoComplete='name' maxLength={100} placeholder='Nombre y apellido' value={form.fullName} onChange={(event) => update('fullName', event.target.value)} aria-invalid={Boolean(errors.fullName)} aria-describedby='fullName-hint fullName-error' />
+          <input id='fullName' name='fullName' autoComplete='name' maxLength={100} value={form.fullName} onChange={(event) => update('fullName', event.target.value)} aria-invalid={Boolean(errors.fullName)} aria-describedby='fullName-hint fullName-error' />
         </Field>
 
         <Field label='Correo electrónico' name='email' error={errors.email} hint='Usaremos este dato solo para gestionar la postulación.'>
-          <input id='email' name='email' type='email' autoComplete='email' maxLength={160} placeholder='correo@ejemplo.cl' value={form.email} onChange={(event) => update('email', event.target.value)} aria-invalid={Boolean(errors.email)} aria-describedby='email-hint email-error' />
+          <input id='email' name='email' type='email' autoComplete='email' maxLength={160} value={form.email} onChange={(event) => update('email', event.target.value)} aria-invalid={Boolean(errors.email)} aria-describedby='email-hint email-error' />
         </Field>
 
         <Field label='Fecha de nacimiento' name='birthDate' error={errors.birthDate} hint={`Postulación desde ${siteConfig.minimumAge} años.`}>
-          <input id='birthDate' name='birthDate' type='date' value={form.birthDate} onChange={(event) => update('birthDate', event.target.value)} aria-invalid={Boolean(errors.birthDate)} aria-describedby='birthDate-hint birthDate-error' />
+          <BirthDatePicker
+            id='birthDate'
+            name='birthDate'
+            value={form.birthDate}
+            invalid={Boolean(errors.birthDate)}
+            describedBy='birthDate-hint birthDate-error'
+            onChange={(value) => update('birthDate', value)}
+          />
         </Field>
 
         <Field className='field--full' label='Teléfono' name='phone' error={errors.phone} hint='Selecciona país y escribe tu número. Chile aparece por defecto.'>
@@ -164,16 +171,11 @@ export function ApplicationForm () {
             international
             countryCallingCodeEditable={false}
             flags={flags}
-            placeholder='9 1234 5678'
             value={form.phone}
             onChange={(value) => update('phone', value || '')}
             aria-invalid={Boolean(errors.phone)}
             aria-describedby='phone-hint phone-error'
           />
-        </Field>
-
-        <Field label='Ciudad o comuna' name='city' error={errors.city} hint='Opcional.'>
-          <input id='city' name='city' autoComplete='address-level2' maxLength={100} placeholder='Ej. Temuco' value={form.city} onChange={(event) => update('city', event.target.value)} aria-invalid={Boolean(errors.city)} aria-describedby='city-hint city-error' />
         </Field>
 
         <Field label='Pronombres' name='pronouns' error={errors.pronouns} hint='Opcional.'>
@@ -183,18 +185,18 @@ export function ApplicationForm () {
           </select>
         </Field>
 
-        {form.pronouns === 'Otro' && (
-          <Field className='field--full' label='¿Cómo prefieres que nos refiramos a ti?' name='pronounsOther' error={errors.pronounsOther} hint='Opcional, solo si elegiste “Otro”.'>
-            <input id='pronounsOther' name='pronounsOther' maxLength={80} value={form.pronounsOther} onChange={(event) => update('pronounsOther', event.target.value)} aria-invalid={Boolean(errors.pronounsOther)} aria-describedby='pronounsOther-hint pronounsOther-error' />
-          </Field>
-        )}
-
-        <Field className='field--full' label='Experiencia previa' name='experience' error={errors.experience} hint='Selecciona la opción más cercana.'>
+        <Field label='Experiencia previa' name='experience' error={errors.experience} hint='Selecciona la opción más cercana.'>
           <select id='experience' name='experience' value={form.experience} onChange={(event) => update('experience', event.target.value)} aria-invalid={Boolean(errors.experience)} aria-describedby='experience-hint experience-error'>
             <option value=''>Selecciona una opción</option>
             {experienceOptions.map((option) => <option key={option} value={option}>{option}</option>)}
           </select>
         </Field>
+
+        {form.pronouns === 'Otro' && (
+          <Field className='field--full' label='¿Cómo prefieres que nos refiramos a ti?' name='pronounsOther' error={errors.pronounsOther} hint='Opcional, solo si elegiste “Otro”.'>
+            <input id='pronounsOther' name='pronounsOther' maxLength={80} value={form.pronounsOther} onChange={(event) => update('pronounsOther', event.target.value)} aria-invalid={Boolean(errors.pronounsOther)} aria-describedby='pronounsOther-hint pronounsOther-error' />
+          </Field>
+        )}
       </div>
 
       <fieldset className='checkbox-group' aria-describedby='availability-hint availability-error'>

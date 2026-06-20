@@ -20,7 +20,6 @@ export interface ApplicationFormInput {
   email: string
   phone: string
   birthDate: string
-  city: string
   pronouns: string
   pronounsOther: string
   experience: string
@@ -36,7 +35,6 @@ export interface NormalizedApplicationData {
   email: string
   phone: string
   birthDate: string
-  city?: string
   pronouns?: string
   experience: ExperienceOption
   availability: string[]
@@ -80,7 +78,6 @@ export function validateApplicationForm (input: ApplicationFormInput, today = ne
   const errors: ApplicationErrors = {}
   const fullName = input.fullName.trim()
   const email = input.email.trim().toLowerCase()
-  const city = input.city.trim()
   const pronouns = input.pronouns.trim()
   const pronounsOther = input.pronounsOther.trim()
   const motivation = input.motivation.trim()
@@ -99,7 +96,6 @@ export function validateApplicationForm (input: ApplicationFormInput, today = ne
   else if (new Date(`${input.birthDate}T00:00:00`) > today) errors.birthDate = 'La fecha no puede estar en el futuro.'
   else if (age < siteConfig.minimumAge) errors.birthDate = `Debes tener al menos ${siteConfig.minimumAge} años.`
 
-  if (city.length > 100) errors.city = 'La ciudad o comuna no puede superar 100 caracteres.'
   if (pronouns && !pronounOptions.includes(pronouns as PronounOption)) errors.pronouns = 'Selecciona una opción válida.'
   if (pronouns === 'Otro' && pronounsOther.length < 2) errors.pronounsOther = 'Indica cómo prefieres que nos refiramos a ti.'
   if (pronounsOther.length > 80) errors.pronounsOther = 'La respuesta no puede superar 80 caracteres.'
@@ -128,7 +124,6 @@ export function validateApplicationForm (input: ApplicationFormInput, today = ne
       email,
       phone: phone as string,
       birthDate: input.birthDate,
-      city: city || undefined,
       pronouns: normalizedPronouns,
       experience: input.experience as ExperienceOption,
       availability: input.availability,
