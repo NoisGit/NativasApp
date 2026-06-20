@@ -1,8 +1,10 @@
 # Nativas Roller Derby
 
-Landing page profesional para Nativas Roller Derby, equipo de roller derby de Temuco, Chile. El proyecto está preparado para portfolio y despliegue estático en GitHub Pages:
+Landing page profesional para Nativas Roller Derby, equipo de roller derby de Temuco, Chile. El proyecto está preparado para despliegue en GitHub Pages:
 
 https://noisgit.github.io/NativasApp/
+
+![Preview de la landing Nativas Roller Derby](docs/images/landing-preview-1920x1080.png)
 
 ## Objetivo
 
@@ -14,7 +16,7 @@ No existe base de datos, backend propio, autenticación ni panel administrativo.
 
 - Landing pública con secciones de Nativas, roller derby, roles, beneficios, preparación, entrenamientos, Instagram, proceso, FAQ y CTA.
 - Rutas públicas: `/`, `/postular`, `/privacidad` usando `HashRouter` para compatibilidad con GitHub Pages.
-- Formulario de postulación con validación de dominio, teléfono chileno normalizado, edad mínima, disponibilidad, motivación, privacidad, honeypot y prevención de doble envío.
+- Formulario de postulación con validación de dominio, teléfono internacional normalizado en E.164, edad mínima, disponibilidad, motivación, privacidad, honeypot y prevención de doble envío.
 - Envío real mediante endpoint público configurable: `VITE_APPLICATION_FORM_ENDPOINT`.
 - Galería editorial local basada en publicaciones públicas de Instagram, sin tokens ni scraping runtime.
 - Carrusel con autoplay, anterior/siguiente, indicadores, pausa por hover/focus/visibilidad, teclado, swipe y reduced motion.
@@ -30,6 +32,7 @@ No existe base de datos, backend propio, autenticación ni panel administrativo.
 - React Router
 - Lucide React
 - GSAP + @gsap/react
+- React Phone Number Input + libphonenumber-js
 - Vitest
 - React Testing Library
 - Playwright
@@ -58,7 +61,7 @@ src/
     config/
   assets/
     brand/
-    gallery/
+    media/
     instagram/
 ```
 
@@ -105,38 +108,53 @@ El formulario no guarda datos en el sitio. Envía un `POST` JSON al endpoint pú
 
 El proveedor puede ser Formspree, Getform u otro servicio compatible con `fetch`.
 
+El teléfono utiliza selector internacional con Chile por defecto y se normaliza en formato E.164 antes de enviarse.
+
 ## Galería de Instagram
 
 La galería vive en:
 
 ```text
 src/infrastructure/content/instagramPostsRepository.ts
+src/infrastructure/content/siteMedia.ts
 ```
 
 Para actualizar una publicación:
 
 1. Descarga una imagen pública y verificable desde el Instagram oficial de Nativas, sin capturar la interfaz de Instagram.
-2. Optimízala para web y guárdala en `src/assets/instagram/` o `src/assets/gallery/`.
+2. Optimízala para web y guárdala en `src/assets/instagram/` o `src/assets/media/`.
 3. Importa la imagen en el repositorio.
 4. Agrega un objeto con `title`, `description`, `image`, `alt`, `mediaType` y `permalink`.
 5. Verifica que el permalink sea HTTPS y pertenezca a `instagram.com`.
 
-La sección no es un feed en vivo y no usa Instagram Graph API porque este sitio se despliega como frontend estático.
+Las imágenes actuales provienen de archivos compartidos para este proyecto y están centralizadas en `siteMedia.ts`.
 
-Los assets actuales se generaron localmente desde la captura de Instagram aportada para este trabajo. Las descargas públicas automatizadas desde Instagram fueron bloqueadas por `403`, por lo que no se incorporaron imágenes de Google, Flickr ni otros equipos como reemplazo.
+Archivos a reemplazar cuando haya nuevas fotografías oficiales:
+
+```text
+src/assets/media/nativas-hero.webp
+src/assets/media/nativas-about.webp
+src/assets/instagram/nativas-bench.webp
+src/assets/instagram/nativas-pack.webp
+src/assets/instagram/nativas-game-red.webp
+src/assets/instagram/nativas-community.webp
+src/assets/instagram/nativas-unidas.webp
+```
+
+La sección no usa Instagram Graph API ni tokens privados.
 
 ## Logos e identidad
 
 Los logos locales están en:
 
 ```text
-src/assets/brand/nativas-logo-primary.png
-src/assets/brand/nativas-logo-symbol.png
+src/assets/brand/nativas-logo-header.png
+src/assets/brand/nativas-logo-header.webp
 public/favicon.png
 public/og-image.jpg
 ```
 
-No se usa una “N” provisional ni un logo inventado. El logo principal actual proviene de la captura oficial aportada y se conserva como raster. Si se obtiene una variante oficial adicional, se reemplaza en `src/assets/brand/` sin cambiar componentes.
+No se usa una “N” provisional ni un logo inventado. El logo actual proviene del archivo aportado para este trabajo; se limpió el fondo turquesa para integrarlo al header oscuro. En la interfaz visible aparece solo en el header; favicon y Open Graph usan la identidad en metadatos.
 
 ## Seguridad frontend
 
@@ -153,7 +171,7 @@ No se usa una “N” provisional ni un logo inventado. El logo principal actual
 
 ## Motion
 
-Las animaciones usan GSAP instalado por npm, no CDN. La capa de motion está en `src/presentation/hooks/useGsapLandingMotion.ts` y utiliza `@gsap/react`, `ScrollTrigger`, scopes por ref, cleanup automático, transforms/opacity y `prefers-reduced-motion`.
+Las animaciones usan GSAP instalado por npm, no CDN. La capa de motion está en `src/presentation/hooks/useGsapLandingMotion.ts` y utiliza `@gsap/react`, `ScrollTrigger`, scopes por ref, cleanup automático, transforms/opacity y `prefers-reduced-motion`. El carrusel mueve solo su viewport horizontal y no modifica el scroll vertical de la página durante autoplay.
 
 ## Accesibilidad
 

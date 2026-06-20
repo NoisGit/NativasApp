@@ -1,3 +1,5 @@
+import { parsePhoneNumberFromString } from 'libphonenumber-js'
+import type { CountryCode } from 'libphonenumber-js'
 import { siteConfig } from '../../shared/config/siteConfig'
 
 export const experienceOptions = [
@@ -8,10 +10,10 @@ export const experienceOptions = [
   'Otra experiencia'
 ] as const
 
-export const contactPreferenceOptions = ['Correo', 'Teléfono', 'WhatsApp'] as const
+export const pronounOptions = ['Ella', 'Él', 'Elle', 'Prefiero no indicar', 'Otro'] as const
 
 export type ExperienceOption = typeof experienceOptions[number]
-export type ContactPreference = typeof contactPreferenceOptions[number]
+export type PronounOption = typeof pronounOptions[number]
 
 export interface ApplicationFormInput {
   fullName: string
@@ -20,9 +22,9 @@ export interface ApplicationFormInput {
   birthDate: string
   city: string
   pronouns: string
+  pronounsOther: string
   experience: string
   availability: string[]
-  contactPreference: string
   motivation: string
   privacyAccepted: boolean
   website: string
@@ -38,7 +40,6 @@ export interface NormalizedApplicationData {
   pronouns?: string
   experience: ExperienceOption
   availability: string[]
-  contactPreference: ContactPreference
   motivation: string
   privacyAccepted: true
   submittedFrom: string
@@ -57,12 +58,11 @@ export interface ApplicationSubmissionGateway {
   submit: (data: NormalizedApplicationData, signal?: AbortSignal) => Promise<void>
 }
 
-export function normalizeChileanPhone (value: string): string | null {
-  const digits = value.replace(/\D/g, '')
-  if (/^9\d{8}$/.test(digits)) return `+56${digits}`
-  if (/^569\d{8}$/.test(digits)) return `+${digits}`
-  if (/^0569\d{8}$/.test(digits)) return `+${digits.slice(1)}`
-  return null
+export function normalizeInternationalPhone (value: string, defaultCountry: CountryCode = 'CL'): string | null {
+  const trimmed = value.trim()
+  if (!trimmed) return null
+  const parsed = parsePhoneNumberFromString(trimmed, defaultCountry)
+  return parsed?.isValid() ? parsed.number : null
 }
 
 export function calculateAge (birthDate: string, today = new Date()): number | null {
@@ -82,8 +82,9 @@ export function validateApplicationForm (input: ApplicationFormInput, today = ne
   const email = input.email.trim().toLowerCase()
   const city = input.city.trim()
   const pronouns = input.pronouns.trim()
+  const pronounsOther = input.pronounsOther.trim()
   const motivation = input.motivation.trim()
-  const phone = normalizeChileanPhone(input.phone)
+  const phone = normalizeInternationalPhone(input.phone)
   const age = calculateAge(input.birthDate, today)
   const allowedAvailability = siteConfig.trainingSchedule.map((training) => training.id)
   const submittedTooFast = input.startedAt && Date.now() - Number(input.startedAt) < 100
@@ -92,16 +93,17 @@ export function validateApplicationForm (input: ApplicationFormInput, today = ne
   if (fullName.length > 100) errors.fullName = 'El nombre no puede superar 100 caracteres.'
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.email = 'Ingresa un correo válido.'
   if (email.length > 160) errors.email = 'El correo es demasiado largo.'
-  if (!phone) errors.phone = 'Ingresa un teléfono chileno válido, por ejemplo +56912345678.'
+  if (!phone) errors.phone = 'Ingresa un teléfono válido con código de país.'
 
   if (age === null) errors.birthDate = 'Ingresa una fecha de nacimiento válida.'
   else if (new Date(`${input.birthDate}T00:00:00`) > today) errors.birthDate = 'La fecha no puede estar en el futuro.'
   else if (age < siteConfig.minimumAge) errors.birthDate = `Debes tener al menos ${siteConfig.minimumAge} años.`
 
   if (city.length > 100) errors.city = 'La ciudad o comuna no puede superar 100 caracteres.'
-  if (pronouns.length > 80) errors.pronouns = 'Los pronombres no pueden superar 80 caracteres.'
+  if (pronouns && !pronounOptions.includes(pronouns as PronounOption)) errors.pronouns = 'Selecciona una opción válida.'
+  if (pronouns === 'Otro' && pronounsOther.length < 2) errors.pronounsOther = 'Indica cómo prefieres que nos refiramos a ti.'
+  if (pronounsOther.length > 80) errors.pronounsOther = 'La respuesta no puede superar 80 caracteres.'
   if (!experienceOptions.includes(input.experience as ExperienceOption)) errors.experience = 'Selecciona una experiencia válida.'
-  if (!contactPreferenceOptions.includes(input.contactPreference as ContactPreference)) errors.contactPreference = 'Selecciona una preferencia válida.'
   if (!input.availability.length) errors.availability = 'Selecciona al menos una disponibilidad.'
   if (input.availability.some((value) => !allowedAvailability.includes(value))) errors.availability = 'La disponibilidad seleccionada no es válida.'
   if (motivation.length < 20) errors.motivation = 'Cuéntanos un poco más, mínimo 20 caracteres.'
@@ -112,6 +114,12 @@ export function validateApplicationForm (input: ApplicationFormInput, today = ne
 
   if (Object.keys(errors).length > 0) return { isValid: false, errors }
 
+  const normalizedPronouns = pronouns === 'Otro'
+    ? pronounsOther
+    : pronouns && pronouns !== 'Prefiero no indicar'
+      ? pronouns
+      : undefined
+
   return {
     isValid: true,
     errors: {},
@@ -121,10 +129,9 @@ export function validateApplicationForm (input: ApplicationFormInput, today = ne
       phone: phone as string,
       birthDate: input.birthDate,
       city: city || undefined,
-      pronouns: pronouns || undefined,
+      pronouns: normalizedPronouns,
       experience: input.experience as ExperienceOption,
       availability: input.availability,
-      contactPreference: input.contactPreference as ContactPreference,
       motivation,
       privacyAccepted: true,
       submittedFrom: siteConfig.publicSiteUrl,

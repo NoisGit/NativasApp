@@ -1,7 +1,7 @@
 import { Menu, X } from 'lucide-react'
 import { useEffect, useId, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import logo from '../../assets/brand/nativas-logo-symbol.webp'
+import { siteMedia } from '../../infrastructure/content/siteMedia'
 import { siteConfig } from '../../shared/config/siteConfig'
 
 function scrollToSection (hash: string) {
@@ -12,6 +12,7 @@ function scrollToSection (hash: string) {
 
 export function Header () {
   const [open, setOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
   const menuId = useId()
   const navigate = useNavigate()
   const location = useLocation()
@@ -26,6 +27,13 @@ export function Header () {
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [])
 
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 16)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
   const goTo = (hash: string) => {
     setOpen(false)
     if (location.pathname !== '/') {
@@ -37,10 +45,10 @@ export function Header () {
   }
 
   return (
-    <header className='site-header'>
+    <header className={`site-header ${scrolled ? 'is-scrolled' : ''}`}>
       <div className='site-header__inner'>
         <button className='brand-link' onClick={() => goTo('inicio')} aria-label='Ir al inicio'>
-          <img src={logo} alt='Nativas Roller Derby' width='620' height='655' />
+          <img src={siteMedia.logoHeader} alt='Nativas Roller Derby' width='716' height='341' />
         </button>
 
         <nav className='desktop-nav' aria-label='Navegación principal'>
