@@ -220,8 +220,8 @@ export function ApplicationForm () {
         {errors.availability && <p id='availability-error' className='field-error'>{errors.availability}</p>}
       </fieldset>
 
-      <Field label='Motivación' name='motivation' error={errors.motivation} hint='Entre 20 y 1000 caracteres.'>
-        <textarea id='motivation' name='motivation' rows={6} maxLength={1000} placeholder='Cuéntanos qué te motiva a conocer Nativas y qué esperas aprender.' value={form.motivation} onChange={(event) => update('motivation', event.target.value)} aria-invalid={Boolean(errors.motivation)} aria-describedby='motivation-hint motivation-error motivation-counter' />
+      <Field label='Motivación' name='motivation' error={errors.motivation}>
+        <textarea id='motivation' name='motivation' rows={6} maxLength={1000} placeholder='Cuéntanos qué te motiva a conocer Nativas y qué esperas aprender.' value={form.motivation} onChange={(event) => update('motivation', event.target.value)} aria-invalid={Boolean(errors.motivation)} aria-describedby='motivation-error motivation-counter' />
         <span id='motivation-counter' className='counter'>{form.motivation.length}/1000</span>
       </Field>
 
@@ -244,7 +244,7 @@ export function ApplicationForm () {
 interface FieldProps {
   label: string
   name: keyof ApplicationFormInput
-  hint: string
+  hint?: string
   error?: string
   className?: string
   children: ReactNode
@@ -255,7 +255,7 @@ function Field ({ label, name, hint, error, className, children }: FieldProps) {
     <div className={`field ${className || ''}`}>
       <label htmlFor={name}>{label}</label>
       {children}
-      <p id={`${name}-hint`} className='field-hint'>{hint}</p>
+      {hint ? <p id={`${name}-hint`} className='field-hint'>{hint}</p> : null}
       {error && <p id={`${name}-error`} className='field-error'>{error}</p>}
     </div>
   )
