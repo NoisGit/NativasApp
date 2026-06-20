@@ -1,11 +1,14 @@
 import { AlertCircle, CheckCircle2, Loader2 } from 'lucide-react'
 import { useMemo, useRef, useState } from 'react'
 import type { FormEvent, ReactNode } from 'react'
+import PhoneInput from 'react-phone-number-input'
+import flags from 'react-phone-number-input/flags'
+import 'react-phone-number-input/style.css'
 import { Link } from 'react-router-dom'
 import { SubmitApplication } from '../../application/application-form/SubmitApplication'
 import {
-  contactPreferenceOptions,
   experienceOptions,
+  pronounOptions,
   validateApplicationForm
 } from '../../domain/application/applicationForm'
 import type { ApplicationErrors, ApplicationFormInput } from '../../domain/application/applicationForm'
@@ -23,9 +26,9 @@ const initialForm = (): ApplicationFormInput => ({
   birthDate: '',
   city: '',
   pronouns: '',
+  pronounsOther: '',
   experience: '',
   availability: [],
-  contactPreference: 'Correo',
   motivation: '',
   privacyAccepted: false,
   website: '',
@@ -78,7 +81,7 @@ export function ApplicationForm () {
     } catch (error) {
       setStatus('error')
       if (error instanceof MissingFormEndpointError) {
-        setMessage('El formulario todavía no tiene un endpoint público configurado. Puedes contactar a Nativas desde Instagram mientras se configura el proveedor externo.')
+        setMessage('No pudimos habilitar el envío en este momento. Puedes escribir a Nativas por Instagram y volver a intentarlo más tarde.')
       } else if (error instanceof ApplicationSubmissionError) {
         setMessage(error.message)
       } else {
@@ -116,9 +119,9 @@ export function ApplicationForm () {
   return (
     <form ref={formRef} className='form-panel' onSubmit={onSubmit} noValidate>
       <div className='form-panel__intro'>
-        <p className='eyebrow'>Formulario externo configurable</p>
+        <p className='eyebrow'>Postulación</p>
         <h1>Postula a Nativas</h1>
-        <p>Completa tus datos para que el equipo pueda revisar tu información. El sitio no guarda una base de datos propia.</p>
+        <p>Cuéntanos un poco sobre ti, tu experiencia y tu disponibilidad. El equipo revisará tu información para coordinar los siguientes pasos.</p>
       </div>
 
       {status === 'error' && message && (
@@ -140,47 +143,63 @@ export function ApplicationForm () {
       />
 
       <div className='form-grid'>
-        <Field label='Nombre completo' name='fullName' error={errors.fullName} hint='Como prefieres que te identifiquemos.'>
-          <input id='fullName' name='fullName' autoComplete='name' maxLength={100} value={form.fullName} onChange={(event) => update('fullName', event.target.value)} aria-invalid={Boolean(errors.fullName)} aria-describedby='fullName-hint fullName-error' />
+        <Field className='field--full' label='Nombre completo' name='fullName' error={errors.fullName} hint='Como prefieres que te identifiquemos.'>
+          <input id='fullName' name='fullName' autoComplete='name' maxLength={100} placeholder='Nombre y apellido' value={form.fullName} onChange={(event) => update('fullName', event.target.value)} aria-invalid={Boolean(errors.fullName)} aria-describedby='fullName-hint fullName-error' />
         </Field>
 
         <Field label='Correo electrónico' name='email' error={errors.email} hint='Usaremos este dato solo para gestionar la postulación.'>
-          <input id='email' name='email' type='email' autoComplete='email' maxLength={160} value={form.email} onChange={(event) => update('email', event.target.value)} aria-invalid={Boolean(errors.email)} aria-describedby='email-hint email-error' />
-        </Field>
-
-        <Field label='Teléfono chileno' name='phone' error={errors.phone} hint='Ejemplo: +56912345678.'>
-          <input id='phone' name='phone' inputMode='tel' autoComplete='tel' value={form.phone} onChange={(event) => update('phone', event.target.value)} aria-invalid={Boolean(errors.phone)} aria-describedby='phone-hint phone-error' />
+          <input id='email' name='email' type='email' autoComplete='email' maxLength={160} placeholder='correo@ejemplo.cl' value={form.email} onChange={(event) => update('email', event.target.value)} aria-invalid={Boolean(errors.email)} aria-describedby='email-hint email-error' />
         </Field>
 
         <Field label='Fecha de nacimiento' name='birthDate' error={errors.birthDate} hint={`Postulación desde ${siteConfig.minimumAge} años.`}>
           <input id='birthDate' name='birthDate' type='date' value={form.birthDate} onChange={(event) => update('birthDate', event.target.value)} aria-invalid={Boolean(errors.birthDate)} aria-describedby='birthDate-hint birthDate-error' />
         </Field>
 
+        <Field className='field--full' label='Teléfono' name='phone' error={errors.phone} hint='Selecciona país y escribe tu número. Chile aparece por defecto.'>
+          <PhoneInput
+            id='phone'
+            name='phone'
+            className='phone-field'
+            defaultCountry='CL'
+            international
+            countryCallingCodeEditable={false}
+            flags={flags}
+            placeholder='9 1234 5678'
+            value={form.phone}
+            onChange={(value) => update('phone', value || '')}
+            aria-invalid={Boolean(errors.phone)}
+            aria-describedby='phone-hint phone-error'
+          />
+        </Field>
+
         <Field label='Ciudad o comuna' name='city' error={errors.city} hint='Opcional.'>
-          <input id='city' name='city' autoComplete='address-level2' maxLength={100} value={form.city} onChange={(event) => update('city', event.target.value)} aria-invalid={Boolean(errors.city)} aria-describedby='city-hint city-error' />
+          <input id='city' name='city' autoComplete='address-level2' maxLength={100} placeholder='Ej. Temuco' value={form.city} onChange={(event) => update('city', event.target.value)} aria-invalid={Boolean(errors.city)} aria-describedby='city-hint city-error' />
         </Field>
 
         <Field label='Pronombres' name='pronouns' error={errors.pronouns} hint='Opcional.'>
-          <input id='pronouns' name='pronouns' maxLength={80} value={form.pronouns} onChange={(event) => update('pronouns', event.target.value)} aria-invalid={Boolean(errors.pronouns)} aria-describedby='pronouns-hint pronouns-error' />
-        </Field>
-
-        <Field label='Experiencia previa' name='experience' error={errors.experience} hint='Selecciona la opción más cercana.'>
-          <select id='experience' name='experience' value={form.experience} onChange={(event) => update('experience', event.target.value)} aria-invalid={Boolean(errors.experience)} aria-describedby='experience-hint experience-error'>
-            <option value=''>Selecciona una opción</option>
-            {experienceOptions.map((option) => <option key={option} value={option}>{option}</option>)}
+          <select id='pronouns' name='pronouns' value={form.pronouns} onChange={(event) => update('pronouns', event.target.value)} aria-invalid={Boolean(errors.pronouns)} aria-describedby='pronouns-hint pronouns-error'>
+            <option value=''>Selecciona una opción (opcional)</option>
+            {pronounOptions.map((option) => <option key={option} value={option}>{option}</option>)}
           </select>
         </Field>
 
-        <Field label='Preferencia de contacto' name='contactPreference' error={errors.contactPreference} hint='Elige por dónde prefieres recibir respuesta.'>
-          <select id='contactPreference' name='contactPreference' value={form.contactPreference} onChange={(event) => update('contactPreference', event.target.value)} aria-invalid={Boolean(errors.contactPreference)} aria-describedby='contactPreference-hint contactPreference-error'>
-            {contactPreferenceOptions.map((option) => <option key={option} value={option}>{option}</option>)}
+        {form.pronouns === 'Otro' && (
+          <Field className='field--full' label='¿Cómo prefieres que nos refiramos a ti?' name='pronounsOther' error={errors.pronounsOther} hint='Opcional, solo si elegiste “Otro”.'>
+            <input id='pronounsOther' name='pronounsOther' maxLength={80} value={form.pronounsOther} onChange={(event) => update('pronounsOther', event.target.value)} aria-invalid={Boolean(errors.pronounsOther)} aria-describedby='pronounsOther-hint pronounsOther-error' />
+          </Field>
+        )}
+
+        <Field className='field--full' label='Experiencia previa' name='experience' error={errors.experience} hint='Selecciona la opción más cercana.'>
+          <select id='experience' name='experience' value={form.experience} onChange={(event) => update('experience', event.target.value)} aria-invalid={Boolean(errors.experience)} aria-describedby='experience-hint experience-error'>
+            <option value=''>Selecciona una opción</option>
+            {experienceOptions.map((option) => <option key={option} value={option}>{option}</option>)}
           </select>
         </Field>
       </div>
 
       <fieldset className='checkbox-group' aria-describedby='availability-hint availability-error'>
         <legend>Disponibilidad</legend>
-        <p id='availability-hint'>Marca una o más opciones según los entrenamientos publicados.</p>
+        <p id='availability-hint'>Marca una o más opciones según los entrenamientos disponibles.</p>
         {siteConfig.trainingSchedule.map((training) => (
           <label key={training.id}>
             <input
@@ -202,7 +221,7 @@ export function ApplicationForm () {
       </fieldset>
 
       <Field label='Motivación' name='motivation' error={errors.motivation} hint='Entre 20 y 1000 caracteres.'>
-        <textarea id='motivation' name='motivation' rows={6} maxLength={1000} value={form.motivation} onChange={(event) => update('motivation', event.target.value)} aria-invalid={Boolean(errors.motivation)} aria-describedby='motivation-hint motivation-error motivation-counter' />
+        <textarea id='motivation' name='motivation' rows={6} maxLength={1000} placeholder='Cuéntanos qué te motiva a conocer Nativas y qué esperas aprender.' value={form.motivation} onChange={(event) => update('motivation', event.target.value)} aria-invalid={Boolean(errors.motivation)} aria-describedby='motivation-hint motivation-error motivation-counter' />
         <span id='motivation-counter' className='counter'>{form.motivation.length}/1000</span>
       </Field>
 
@@ -227,12 +246,13 @@ interface FieldProps {
   name: keyof ApplicationFormInput
   hint: string
   error?: string
+  className?: string
   children: ReactNode
 }
 
-function Field ({ label, name, hint, error, children }: FieldProps) {
+function Field ({ label, name, hint, error, className, children }: FieldProps) {
   return (
-    <div className='field'>
+    <div className={`field ${className || ''}`}>
       <label htmlFor={name}>{label}</label>
       {children}
       <p id={`${name}-hint`} className='field-hint'>{hint}</p>

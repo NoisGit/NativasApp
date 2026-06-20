@@ -1,85 +1,51 @@
 import type { InstagramPost } from '../../domain/instagram/instagramPost'
-import teamWide from '../../assets/instagram/nativas-post-team-wide.jpg'
-import teamLeft from '../../assets/instagram/nativas-post-team-left.jpg'
-import teamRight from '../../assets/instagram/nativas-post-team-right.jpg'
-import logoClose from '../../assets/instagram/nativas-post-logo-close.jpg'
-import wordmark from '../../assets/instagram/nativas-post-wordmark.jpg'
-import symbol from '../../assets/instagram/nativas-post-symbol.jpg'
-import community from '../../assets/instagram/nativas-post-community.jpg'
-import southTexture from '../../assets/instagram/nativas-post-south-texture.jpg'
+import { siteMedia } from './siteMedia'
 
 const posts: InstagramPost[] = [
   {
-    id: 'post-power-trio',
-    title: 'Power trio en la pista',
-    description: 'Publicación oficial sobre compañeras de Nativas vinculadas a entrenamientos y selección.',
-    image: teamWide,
-    permalink: 'https://www.instagram.com/nativas_rollerderby/p/DE5KXoiRp7R/',
-    mediaType: 'image',
-    alt: 'Patinadoras de roller derby durante una instancia de entrenamiento'
-  },
-  {
-    id: 'post-amor-derby-2',
-    title: 'Amor por el Derby',
-    description: 'Encuentro derby en el sur con Nativas y equipos invitados.',
-    image: teamLeft,
+    id: 'post-banca',
+    title: 'Concentración antes de salir',
+    description: 'Instante de pista con integrantes preparándose para volver al juego.',
+    image: siteMedia.instagram.benchPhoto,
     permalink: 'https://www.instagram.com/p/DUtE_nvEQFj/',
     mediaType: 'image',
-    alt: 'Equipo de roller derby en una pista durante actividad deportiva'
+    alt: 'Integrantes de roller derby sentadas con protecciones y patines junto a la pista'
   },
   {
-    id: 'post-amor-derby-1',
-    title: 'Partido en Temuco',
-    description: 'Actividad deportiva difundida por Nativas para la comunidad derby.',
-    image: teamRight,
+    id: 'post-pack',
+    title: 'Juego de pack',
+    description: 'Bloqueo, comunicación y lectura colectiva sobre patines.',
+    image: siteMedia.instagram.packPhoto,
     permalink: 'https://www.instagram.com/p/DUrlQh_kTzg/',
     mediaType: 'image',
-    alt: 'Escena de patinaje y estrategia de equipo'
+    alt: 'Patinadoras de roller derby bloqueando en grupo sobre una pista azul'
   },
   {
-    id: 'post-araucania-derby',
-    title: 'Derby en La Araucanía',
-    description: 'Convocatoria pública a una jornada de roller derby en el sur.',
-    image: community,
-    permalink: 'https://www.instagram.com/p/DUlgfgbkeG9/',
+    id: 'post-seleccion',
+    title: 'Derby en competencia',
+    description: 'Acción de contacto reglamentado y estrategia en pista.',
+    image: siteMedia.instagram.gameRedPhoto,
+    permalink: 'https://www.instagram.com/p/DE5KXoiRp7R/',
     mediaType: 'image',
-    alt: 'Patinadoras reunidas en una pista de la zona sur'
-  },
-  {
-    id: 'post-nativas-logo',
-    title: 'Identidad Nativas',
-    description: 'Branding oficial utilizado como referencia visual del equipo.',
-    image: logoClose,
-    permalink: 'https://www.instagram.com/nativas_rollerderby/',
-    mediaType: 'image',
-    alt: 'Símbolo gráfico oficial de Nativas Roller Derby'
+    alt: 'Patinadoras de roller derby compitiendo con uniformes rojos'
   },
   {
     id: 'post-comunidad',
-    title: 'Comunidad sobre ruedas',
-    description: 'Registro editorial local para representar comunidad, aprendizaje y constancia.',
-    image: wordmark,
-    permalink: 'https://www.instagram.com/p/C8Pg2-fu_XT/',
+    title: 'Comunidad Nativas',
+    description: 'Momentos de equipo fuera de la pista, con comunidad y celebración.',
+    image: siteMedia.instagram.communityPhoto,
+    permalink: 'https://www.instagram.com/p/DUlgfgbkeG9/',
     mediaType: 'image',
-    alt: 'Logo oficial de Nativas usado como tarjeta de comunidad'
+    alt: 'Grupo de integrantes de Nativas reunidas al aire libre con medallas'
   },
   {
-    id: 'post-temuco',
-    title: 'Desde Temuco',
-    description: 'Contenido público asociado a Nativas y su identidad territorial.',
-    image: symbol,
-    permalink: 'https://www.instagram.com/p/C8UnuISOhm3/',
-    mediaType: 'image',
-    alt: 'Imagen de perfil oficial asociada a Nativas Roller Derby'
-  },
-  {
-    id: 'post-roller-derby',
-    title: 'Roller derby en movimiento',
-    description: 'Selección editorial de actividad y cultura derby enlazada al Instagram oficial.',
-    image: southTexture,
+    id: 'post-unidas',
+    title: 'Nativas unidas',
+    description: 'Fotografía grupal de Nativas vinculada a encuentros y comunidad.',
+    image: siteMedia.instagram.unidasPhoto,
     permalink: 'https://www.instagram.com/p/DE74ZlYxQS-/',
     mediaType: 'image',
-    alt: 'Patinadora avanzando durante una sesión deportiva'
+    alt: 'Integrantes de Nativas posando con patines bajo una estructura techada'
   }
 ]
 

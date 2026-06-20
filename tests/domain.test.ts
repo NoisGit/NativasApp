@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { calculateAge, normalizeChileanPhone, validateApplicationForm } from '../src/domain/application/applicationForm'
+import { calculateAge, normalizeInternationalPhone, validateApplicationForm } from '../src/domain/application/applicationForm'
 import { isAllowedInstagramUrl } from '../src/domain/shared/url'
 
 const validForm = {
@@ -9,9 +9,9 @@ const validForm = {
   birthDate: '1994-05-20',
   city: 'Temuco',
   pronouns: '',
+  pronounsOther: '',
   experience: 'Sin experiencia',
   availability: ['martes-campos'],
-  contactPreference: 'Correo',
   motivation: 'Quiero aprender roller derby con constancia y respeto.',
   privacyAccepted: true,
   website: '',
@@ -19,11 +19,11 @@ const validForm = {
 }
 
 describe('application domain', () => {
-  it('normalizes Chilean phone numbers', () => {
-    expect(normalizeChileanPhone('912345678')).toBe('+56912345678')
-    expect(normalizeChileanPhone('+56 9 1234 5678')).toBe('+56912345678')
-    expect(normalizeChileanPhone('56912345678')).toBe('+56912345678')
-    expect(normalizeChileanPhone('+569')).toBeNull()
+  it('normalizes international phone numbers to E.164', () => {
+    expect(normalizeInternationalPhone('912345678')).toBe('+56912345678')
+    expect(normalizeInternationalPhone('+56 9 1234 5678')).toBe('+56912345678')
+    expect(normalizeInternationalPhone('+1 213 373 4253')).toBe('+12133734253')
+    expect(normalizeInternationalPhone('+569')).toBeNull()
   })
 
   it('calculates age using day and month', () => {
@@ -36,6 +36,17 @@ describe('application domain', () => {
     expect(result.isValid).toBe(true)
     expect(result.data?.email).toBe('persona@mail.cl')
     expect(result.data?.phone).toBe('+56912345678')
+    expect(result.data).not.toHaveProperty('contactPreference')
+  })
+
+  it('accepts pronouns and normalizes the custom option', () => {
+    const result = validateApplicationForm({
+      ...validForm,
+      pronouns: 'Otro',
+      pronounsOther: 'Nativa'
+    })
+    expect(result.isValid).toBe(true)
+    expect(result.data?.pronouns).toBe('Nativa')
   })
 
   it('rejects invalid availability, minors, honeypot and short motivation', () => {

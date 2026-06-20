@@ -14,21 +14,28 @@ export function useGsapLandingMotion () {
 
     const intro = gsap.timeline({ defaults: { ease: 'power3.out', duration: 0.9 } })
     intro
-      .from('.hero__content > *', { y: 28, autoAlpha: 0, stagger: 0.08 })
-      .from('.hero__badge', { scale: 0.86, rotation: -4, autoAlpha: 0 }, '<0.1')
-      .from('.hero__media', { y: 34, scale: 0.96, autoAlpha: 0 }, '<0.12')
+      .from('.hero__content > *', { y: 34, autoAlpha: 0, stagger: 0.08, clearProps: 'transform,opacity,visibility' })
+      .from('.hero__media', {
+        clipPath: 'inset(14% 14% 14% 14%)',
+        scale: 0.94,
+        autoAlpha: 0,
+        clearProps: 'clipPath,transform,opacity,visibility'
+      }, '<0.08')
+      .from('.hero__media img', { scale: 1.12, duration: 1.15, clearProps: 'transform' }, '<')
 
-    gsap.to('.hero__badge', {
-      y: -14,
-      rotation: 1.5,
+    gsap.to('.hero__orb', {
+      x: 'random(-16, 16)',
+      y: 'random(-22, 22)',
+      scale: 'random(0.94, 1.05)',
       repeat: -1,
       yoyo: true,
-      duration: 4.8,
+      duration: 5.5,
+      stagger: 0.35,
       ease: 'sine.inOut'
     })
 
     gsap.to('.hero__media img', {
-      yPercent: -8,
+      yPercent: -6,
       ease: 'none',
       scrollTrigger: {
         trigger: '.hero',
@@ -44,25 +51,84 @@ export function useGsapLandingMotion () {
         autoAlpha: 0,
         duration: 0.85,
         ease: 'power3.out',
+        clearProps: 'transform,opacity,visibility',
         scrollTrigger: {
           trigger: section,
           start: 'top 82%',
-          toggleActions: 'play none none reverse'
+          once: true
         }
       })
     })
 
-    gsap.utils.toArray<HTMLElement>('.motion-card').forEach((card, index) => {
-      gsap.from(card, {
+    ScrollTrigger.batch('.motion-card', {
+      start: 'top 88%',
+      once: true,
+      onEnter: (cards) => {
+        gsap.from(cards, {
+          y: 28,
+          autoAlpha: 0,
+          duration: 0.72,
+          stagger: 0.08,
+          ease: 'power2.out',
+          clearProps: 'transform,opacity,visibility'
+        })
+      }
+    })
+
+    gsap.from('.process-list li', {
+      y: 30,
+      autoAlpha: 0,
+      duration: 0.72,
+      stagger: 0.09,
+      ease: 'power2.out',
+      clearProps: 'transform,opacity,visibility',
+      scrollTrigger: {
+        trigger: '.process-list',
+        start: 'top 84%',
+        once: true
+      }
+    })
+
+    gsap.from('.instagram-card', {
+      x: 34,
+      autoAlpha: 0,
+      duration: 0.78,
+      stagger: 0.08,
+      ease: 'power2.out',
+      clearProps: 'transform,opacity,visibility',
+      scrollTrigger: {
+        trigger: '#instagram',
+        start: 'top 78%',
+        once: true
+      }
+    })
+
+    gsap.from('.final-cta > *', {
+      y: 30,
+      autoAlpha: 0,
+      duration: 0.82,
+      stagger: 0.08,
+      ease: 'power3.out',
+      clearProps: 'transform,opacity,visibility',
+      scrollTrigger: {
+        trigger: '.final-cta',
+        start: 'top 86%',
+        once: true
+      }
+    })
+
+    gsap.utils.toArray<HTMLElement>('.split-section img').forEach((image) => {
+      gsap.from(image, {
         y: 24,
+        scale: 0.98,
         autoAlpha: 0,
-        duration: 0.7,
-        delay: (index % 4) * 0.04,
+        duration: 0.8,
         ease: 'power2.out',
+        clearProps: 'transform,opacity,visibility',
         scrollTrigger: {
-          trigger: card,
-          start: 'top 88%',
-          toggleActions: 'play none none reverse'
+          trigger: image,
+          start: 'top 86%',
+          once: true
         }
       })
     })

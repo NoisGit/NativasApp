@@ -37,7 +37,7 @@ export class HttpApplicationSubmissionGateway implements ApplicationSubmissionGa
       })
 
       if (!response.ok) {
-        throw new ApplicationSubmissionError('El proveedor externo no pudo recibir la postulación.')
+        throw new ApplicationSubmissionError('No pudimos enviar la postulación. Inténtalo nuevamente.')
       }
     } catch (error) {
       if (error instanceof MissingFormEndpointError || error instanceof ApplicationSubmissionError) throw error

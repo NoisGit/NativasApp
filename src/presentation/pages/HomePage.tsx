@@ -1,9 +1,7 @@
 import { ArrowRight, CheckCircle2, ShieldCheck, Sparkles, UsersRound } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import logo from '../../assets/brand/nativas-logo-primary.webp'
-import heroImage from '../../assets/gallery/nativas-ig-hero.jpg'
-import teamImage from '../../assets/instagram/nativas-post-team-wide.jpg'
 import { trainings } from '../../infrastructure/content/trainings'
+import { siteMedia } from '../../infrastructure/content/siteMedia'
 import { siteConfig } from '../../shared/config/siteConfig'
 import { Faq } from '../components/Faq'
 import { InstagramCarousel } from '../components/InstagramCarousel'
@@ -11,7 +9,7 @@ import { useGsapLandingMotion } from '../hooks/useGsapLandingMotion'
 import { usePageMeta } from '../hooks/usePageMeta'
 
 export function HomePage () {
-  usePageMeta('Nativas Roller Derby | Temuco', 'Landing oficial de Nativas Roller Derby en Temuco: patinaje, comunidad, entrenamientos y postulación.')
+  usePageMeta('Nativas Roller Derby | Temuco', 'Nativas Roller Derby en Temuco: patinaje, comunidad, entrenamientos y postulación.')
   const motionScope = useGsapLandingMotion()
 
   return (
@@ -27,11 +25,12 @@ export function HomePage () {
           </div>
           <p className='hero__meta'>Postulación desde {siteConfig.minimumAge} años. Experiencia previa no obligatoria.</p>
         </div>
-        <div className='hero__stage' aria-label='Logo oficial de Nativas sobre fotografía del equipo'>
+        <div className='hero__stage' aria-label='Fotografía de Nativas Roller Derby en pista'>
+          <span className='hero__orb hero__orb--one' aria-hidden='true' />
+          <span className='hero__orb hero__orb--two' aria-hidden='true' />
           <figure className='hero__media'>
-            <img src={heroImage} alt='Fotografía de Instagram de Nativas Roller Derby con integrantes del equipo' width='875' height='1150' />
+            <img src={siteMedia.heroPhoto} alt='Integrantes de Nativas Roller Derby posando con patines en una cancha techada' width='1018' height='1204' />
           </figure>
-          <img className='hero__badge' src={logo} alt='Nativas Roller Derby' width='722' height='790' />
         </div>
       </section>
 
@@ -42,7 +41,7 @@ export function HomePage () {
           <p>Nativas combina deporte, estrategia y comunidad. El crecimiento se construye de forma colectiva, con constancia, respeto, comunicación y trabajo en equipo.</p>
           <p>Quienes llegan pueden aprender progresivamente: desde habilidades de patinaje y seguridad hasta dinámicas de pack, roles y lectura táctica de la pista.</p>
         </div>
-        <img src={teamImage} alt='Integrantes de Nativas en una publicación de Instagram' loading='lazy' decoding='async' width='875' height='360' />
+        <img src={siteMedia.aboutPhoto} alt='Integrantes de Nativas reunidas al aire libre con medallas' loading='lazy' decoding='async' width='1267' height='1199' />
       </section>
 
       <section id='roller-derby' className='section section-reveal'>
@@ -95,13 +94,12 @@ export function HomePage () {
       <section id='entrenamientos' className='section section-reveal'>
         <div className='section__header'>
           <p className='eyebrow'>Entrenamientos</p>
-          <h2>Horarios publicados</h2>
-          <p>Datos conservados desde el repositorio. Los horarios pueden cambiar; revisa Instagram para información actualizada.</p>
+          <h2>Días y horarios</h2>
+          <p>Los horarios pueden cambiar. Revisa el Instagram oficial antes de asistir.</p>
         </div>
         <div className='cards three'>
           {trainings.map((training) => (
             <article className='card schedule-card motion-card' key={training.id}>
-              <span>{training.tag}</span>
               <h3>{training.day}</h3>
               <p>{training.time}</p>
               <strong>{training.place}</strong>
@@ -119,7 +117,7 @@ export function HomePage () {
         </div>
         <ol className='process-list'>
           <li>Completa el formulario.</li>
-          <li>Envía tus datos al proveedor externo configurado.</li>
+          <li>Envía tus datos.</li>
           <li>Nativas revisará tu información.</li>
           <li>El equipo se pondrá en contacto.</li>
           <li>Se coordinarán los siguientes pasos.</li>

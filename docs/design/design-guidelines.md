@@ -2,7 +2,7 @@
 
 ## Identidad
 
-Usar logos oficiales locales sin redibujar, deformar, recolorear ni reemplazar por iniciales. Las variantes viven en `src/assets/brand/`. El logo principal actual se obtuvo desde la captura de Instagram aportada para este trabajo y se mantiene como raster.
+Usar logos oficiales locales sin redibujar, deformar, recolorear ni reemplazar por iniciales. Las variantes viven en `src/assets/brand/`. El logo actual se limpió para fondo transparente y se usa visualmente solo en el header; favicon y Open Graph mantienen la identidad en metadatos.
 
 ## Paleta
 
@@ -32,11 +32,11 @@ Botones con estados hover/focus visibles, altura táctil mínima de `44px`, icon
 
 ## Fotografía y galería
 
-Usar imágenes locales verificables, sin hotlinking a Instagram. Cada tarjeta debe tener `alt`, permalink original cuando esté confirmado y enlace externo seguro. No usar fotos genéricas de Google ni de otros equipos para representar a Nativas.
+Usar imágenes locales verificables, sin hotlinking a Instagram. La fotografía debe ser protagonista en hero y galería. Cada tarjeta debe tener `alt`, permalink original cuando esté confirmado y enlace externo seguro. No usar logos para rellenar tarjetas ni fotos genéricas de Google u otros equipos para representar a Nativas.
 
 ## Formulario
 
-Labels visibles, ayudas breves, errores inline, contador de motivación, resumen accesible y foco en el primer error. No prometer cupo ni respuesta inmediata.
+Labels visibles, ayudas breves, errores inline, contador de motivación, resumen accesible y foco en el primer error. El teléfono usa selector internacional con Chile por defecto y normalización E.164. Pronombres es un select opcional con campo adicional solo para “Otro”. No prometer cupo ni respuesta inmediata.
 
 ## Navegación
 
@@ -48,8 +48,8 @@ Cumplir WCAG AA razonable: contraste, foco visible, landmarks, skip link, headin
 
 ## Animaciones
 
-Usar GSAP por npm para secuencias y scroll motion, con `@gsap/react`, scopes y cleanup. Respetar `prefers-reduced-motion`. El carrusel pausa con hover, foco y pestaña oculta.
+Usar GSAP por npm para secuencias y scroll motion, con `@gsap/react`, scopes y cleanup. Respetar `prefers-reduced-motion`. Los ScrollTriggers deben usar `once` o comportamiento equivalente para no esconder contenido al volver hacia arriba. El carrusel pausa con hover, foco y pestaña oculta, y su autoplay nunca debe modificar `window.scrollY`.
 
 ## Instagram
 
-La galería es editorial local. No se presenta como feed en vivo y no usa tokens privados.
+La galería usa publicaciones/fotografías locales verificables, no logos ni símbolos de perfil como reemplazo. No usa tokens privados.

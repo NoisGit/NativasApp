@@ -6,7 +6,7 @@ import { App } from '../src/App'
 describe('home interactions', () => {
   it('renders the official logo, navigation, CTA and footer Instagram link', () => {
     render(<App />)
-    expect(screen.getAllByAltText('Nativas Roller Derby').length).toBeGreaterThan(0)
+    expect(screen.getAllByAltText('Nativas Roller Derby')).toHaveLength(1)
     expect(screen.getByRole('heading', { name: /Patinaje, estrategia/i })).toBeInTheDocument()
     expect(screen.getAllByRole('link', { name: /Postula/i })[0]).toHaveAttribute('href', '#/postular')
     const instagramLinks = screen.getAllByRole('link', { name: /Instagram$/i })
@@ -37,7 +37,7 @@ describe('home interactions', () => {
     const user = userEvent.setup()
     render(<App />)
     const links = screen.getAllByRole('link', { name: /Abrir publicación en Instagram/i })
-    expect(links.length).toBeGreaterThanOrEqual(8)
+    expect(links.length).toBeGreaterThanOrEqual(5)
     links.forEach((link) => {
       expect(link).toHaveAttribute('target', '_blank')
       expect(link).toHaveAttribute('rel', 'noopener noreferrer')
@@ -46,5 +46,13 @@ describe('home interactions', () => {
     await user.click(screen.getByRole('button', { name: /Ver publicación siguiente/i }))
     await user.click(screen.getByRole('button', { name: /Ver publicación anterior/i }))
     await user.click(screen.getByRole('button', { name: /Ver publicación 2 de/i }))
+  })
+
+  it('shows training cards without invented tags', () => {
+    render(<App />)
+    expect(screen.getByRole('heading', { name: /Días y horarios/i })).toBeInTheDocument()
+    expect(screen.queryByText(/Técnica y fundamentos/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(/Estrategia y pack/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(/Patinaje y resistencia/i)).not.toBeInTheDocument()
   })
 })
