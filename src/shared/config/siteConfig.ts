@@ -15,7 +15,6 @@ export const siteConfig = {
     { label: 'Nativas', to: '/', hash: 'nativas' },
     { label: 'Roller Derby', to: '/', hash: 'roller-derby' },
     { label: 'Entrenamientos', to: '/', hash: 'entrenamientos' },
-    { label: 'Instagram', to: '/', hash: 'instagram' },
     { label: 'Preguntas', to: '/', hash: 'preguntas' }
   ],
   trainingSchedule: [

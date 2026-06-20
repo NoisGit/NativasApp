@@ -1,17 +1,37 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { App } from '../src/App'
 
 describe('home interactions', () => {
-  it('renders the official logo, navigation, CTA and footer Instagram link', () => {
+  it('renders the official logo only in the header, navigation, CTA and footer Instagram link', () => {
     render(<App />)
     expect(screen.getAllByAltText('Nativas Roller Derby')).toHaveLength(1)
     expect(screen.getByRole('heading', { name: /Patinaje, estrategia/i })).toBeInTheDocument()
     expect(screen.getAllByRole('link', { name: /Postula/i })[0]).toHaveAttribute('href', '#/postular')
-    const instagramLinks = screen.getAllByRole('link', { name: /Instagram$/i })
-    expect(instagramLinks[instagramLinks.length - 1]).toHaveAttribute('rel', 'noopener noreferrer')
+
+    const mainNav = screen.getByRole('navigation', { name: /Navegación principal/i })
+    expect(within(mainNav).queryByRole('button', { name: /Instagram/i })).not.toBeInTheDocument()
+
+    const instagramLinks = screen.getAllByRole('link', { name: /Instagram/i })
+    const footerInstagram = instagramLinks[instagramLinks.length - 1]
+    expect(footerInstagram).toHaveAttribute('href', 'https://www.instagram.com/nativas_rollerderby/')
+    expect(footerInstagram).toHaveAttribute('rel', 'noopener noreferrer')
     expect(screen.getByRole('link', { name: /Privacidad/i })).toHaveAttribute('href', '#/privacidad')
+  })
+
+  it('uses route-safe section navigation for Conoce a Nativas', async () => {
+    const user = userEvent.setup()
+    const scrollIntoView = vi.fn()
+    const original = Element.prototype.scrollIntoView
+    Element.prototype.scrollIntoView = scrollIntoView
+
+    render(<App />)
+    await user.click(screen.getByRole('button', { name: /Conoce a Nativas/i }))
+
+    await waitFor(() => expect(scrollIntoView).toHaveBeenCalled())
+    expect(screen.queryByText(/Ruta no disponible/i)).not.toBeInTheDocument()
+    Element.prototype.scrollIntoView = original
   })
 
   it('opens and closes the mobile menu with Escape', async () => {
@@ -33,9 +53,9 @@ describe('home interactions', () => {
     expect(button).toHaveAttribute('aria-expanded', 'false')
   })
 
-  it('renders Instagram cards with safe external links and carousel controls', async () => {
+  it('renders Instagram cards with safe external links, hidden clones and carousel controls', async () => {
     const user = userEvent.setup()
-    render(<App />)
+    const { container } = render(<App />)
     const links = screen.getAllByRole('link', { name: /Abrir publicación en Instagram/i })
     expect(links.length).toBeGreaterThanOrEqual(5)
     links.forEach((link) => {
@@ -43,6 +63,10 @@ describe('home interactions', () => {
       expect(link).toHaveAttribute('rel', 'noopener noreferrer')
       expect(link.getAttribute('href')).toMatch(/^https:\/\/(www\.)?instagram\.com\//)
     })
+
+    const hiddenCloneLinks = container.querySelectorAll('.carousel__slide[aria-hidden="true"] .instagram-card[tabindex="-1"]')
+    expect(hiddenCloneLinks.length).toBeGreaterThan(0)
+
     await user.click(screen.getByRole('button', { name: /Ver publicación siguiente/i }))
     await user.click(screen.getByRole('button', { name: /Ver publicación anterior/i }))
     await user.click(screen.getByRole('button', { name: /Ver publicación 2 de/i }))

@@ -1,98 +1,59 @@
-# Nativas Roller Derby
+# Nativas Roller Derby Landing Page
 
-Landing page profesional para Nativas Roller Derby, equipo de roller derby de Temuco, Chile. El proyecto está preparado para despliegue en GitHub Pages:
+![Nativas Roller Derby landing page](docs/images/landing-preview-1920x1080.png)
 
-https://noisgit.github.io/NativasApp/
+Professional static landing page for **Nativas Roller Derby**, a roller derby team from Temuco, Chile. The project is built as a portfolio-quality frontend: strong visual identity, real local media, accessible navigation, an Instagram-style gallery, and a validated application form that can submit to a configurable public form endpoint.
 
-![Preview de la landing Nativas Roller Derby](docs/images/landing-preview-1920x1080.png)
+Live site: <https://noisgit.github.io/NativasApp/>
 
-## Objetivo
+## What This Project Does
 
-Transformar el proyecto en una experiencia frontend completa: identidad visual, contenido educativo, entrenamientos, galería editorial de Instagram, formulario de postulación, privacidad, accesibilidad, SEO, seguridad frontend y validaciones.
-
-No existe base de datos, backend propio, autenticación ni panel administrativo.
-
-## Funcionalidades
-
-- Landing pública con secciones de Nativas, roller derby, roles, beneficios, preparación, entrenamientos, Instagram, proceso, FAQ y CTA.
-- Rutas públicas: `/`, `/postular`, `/privacidad` usando `HashRouter` para compatibilidad con GitHub Pages.
-- Formulario de postulación con validación de dominio, teléfono internacional normalizado en E.164, edad mínima, disponibilidad, motivación, privacidad, honeypot y prevención de doble envío.
-- Envío real mediante endpoint público configurable: `VITE_APPLICATION_FORM_ENDPOINT`.
-- Galería editorial local basada en publicaciones públicas de Instagram, sin tokens ni scraping runtime.
-- Carrusel con autoplay, anterior/siguiente, indicadores, pausa por hover/focus/visibilidad, teclado, swipe y reduced motion.
-- SEO con Open Graph, Twitter Card, canonical, robots, sitemap, JSON-LD y favicon.
-- CI y deploy con GitHub Actions.
+- Presents Nativas with a modern, responsive landing page.
+- Explains roller derby, track roles, benefits, preparation, training days, FAQ, and the application process.
+- Uses a local media repository for brand and photography assets.
+- Includes a smooth GSAP motion layer with reduced-motion support.
+- Provides an accessible carousel based on local Instagram publication data.
+- Includes a complete application form with client-side validation and E.164 phone normalization.
+- Deploys as a static frontend on GitHub Pages with `base: /NativasApp/`.
 
 ## Stack
 
-- React 18
-- TypeScript estricto
+- React
+- TypeScript
 - Vite
 - Tailwind CSS
-- React Router
-- Lucide React
-- GSAP + @gsap/react
-- React Phone Number Input + libphonenumber-js
-- Vitest
-- React Testing Library
+- GSAP + ScrollTrigger
+- React Router with HashRouter for GitHub Pages compatibility
+- react-phone-number-input + libphonenumber-js
+- Vitest + React Testing Library
 - Playwright
-- ESLint
+- GitHub Actions
 
-## Arquitectura DDD pragmática
+## Architecture
+
+The project keeps a pragmatic DDD separation:
 
 ```text
 src/
-  domain/
-    application/
-    instagram/
-    shared/
-  application/
-    application-form/
-    instagram-gallery/
-  infrastructure/
-    content/
-    form/
-  presentation/
-    components/
-    hooks/
-    layouts/
-    pages/
-  shared/
-    config/
-  assets/
-    brand/
-    media/
-    instagram/
+  domain/          Business rules, entities, validation and URL checks
+  application/     Use cases such as form submission and Instagram retrieval
+  infrastructure/  Form gateway, public configuration and local content repositories
+  presentation/    Pages, layouts, hooks and UI components
+  shared/          Site-wide configuration and shared utilities
+  assets/          Brand, media and Instagram images
 ```
 
-`domain` contiene reglas puras. `application` contiene casos de uso. `infrastructure` contiene adaptadores y contenido local. `presentation` contiene React, estados visuales e interacción.
+The UI does not import backend details directly. The application form depends on a gateway contract, and the current implementation posts to a public endpoint configured through environment variables.
 
-## Instalación
+## Static Frontend Scope
 
-```bash
-npm ci
-```
+This repository intentionally has no database, no authentication, no admin dashboard, and no private backend. All `VITE_*` variables are public at build time and must never contain secrets.
 
-## Desarrollo
+Instagram content is represented by local image files and explicit permalinks in `src/infrastructure/content/instagramPostsRepository.ts`. There is no runtime scraping, no Instagram token, and no private API call from the browser.
 
-```bash
-npm run dev
-```
+## Environment Variables
 
-## Validación
-
-```bash
-npm run lint
-npm run typecheck
-npm run test:run
-npm run build
-npm run test:e2e
-npm run validate
-```
-
-`lint` no modifica archivos. Para autocorrecciones explícitas existe `npm run lint:fix`.
-
-## Variables públicas
+Copy `.env.example` if you need local configuration:
 
 ```env
 VITE_APPLICATION_FORM_ENDPOINT=
@@ -100,95 +61,134 @@ VITE_PUBLIC_SITE_URL=https://noisgit.github.io/NativasApp/
 VITE_FORM_PROVIDER=formspree
 ```
 
-Todas las variables `VITE_*` son públicas. No deben contener secretos, tokens privados, service roles ni credenciales.
+`VITE_APPLICATION_FORM_ENDPOINT` is a public form-provider URL such as a Formspree or Getform endpoint. The app shows a friendly error if it is missing and never simulates a successful submission.
 
-## Formulario
+## Local Development
 
-El formulario no guarda datos en el sitio. Envía un `POST` JSON al endpoint público configurado. Si el endpoint no existe o no es HTTPS, el sitio muestra un error amigable y no simula éxito.
-
-El proveedor puede ser Formspree, Getform u otro servicio compatible con `fetch`.
-
-El teléfono utiliza selector internacional con Chile por defecto y se normaliza en formato E.164 antes de enviarse.
-
-## Galería de Instagram
-
-La galería vive en:
-
-```text
-src/infrastructure/content/instagramPostsRepository.ts
-src/infrastructure/content/siteMedia.ts
+```bash
+npm ci
+npm run dev
 ```
 
-Para actualizar una publicación:
+The Vite dev server serves the app with the GitHub Pages base path.
 
-1. Descarga una imagen pública y verificable desde el Instagram oficial de Nativas, sin capturar la interfaz de Instagram.
-2. Optimízala para web y guárdala en `src/assets/instagram/` o `src/assets/media/`.
-3. Importa la imagen en el repositorio.
-4. Agrega un objeto con `title`, `description`, `image`, `alt`, `mediaType` y `permalink`.
-5. Verifica que el permalink sea HTTPS y pertenezca a `instagram.com`.
+## Scripts
 
-Las imágenes actuales provienen de archivos compartidos para este proyecto y están centralizadas en `siteMedia.ts`.
-
-Archivos a reemplazar cuando haya nuevas fotografías oficiales:
-
-```text
-src/assets/media/nativas-hero.webp
-src/assets/media/nativas-about.webp
-src/assets/instagram/nativas-bench.webp
-src/assets/instagram/nativas-pack.webp
-src/assets/instagram/nativas-game-red.webp
-src/assets/instagram/nativas-community.webp
-src/assets/instagram/nativas-unidas.webp
+```bash
+npm run lint
+npm run typecheck
+npm run test:run
+npm run test:e2e
+npm run build
+npm audit
 ```
 
-La sección no usa Instagram Graph API ni tokens privados.
-
-## Logos e identidad
-
-Los logos locales están en:
-
-```text
-src/assets/brand/nativas-logo-header.png
-src/assets/brand/nativas-logo-header.webp
-public/favicon.png
-public/og-image.jpg
-```
-
-No se usa una “N” provisional ni un logo inventado. El logo actual proviene del archivo aportado para este trabajo; se limpió el fondo turquesa para integrarlo al header oscuro. En la interfaz visible aparece solo en el header; favicon y Open Graph usan la identidad en metadatos.
-
-## Seguridad frontend
-
-- Sin Supabase, Firebase, base de datos, auth ni panel admin.
-- Sin secretos en frontend.
-- Sin tokens de Instagram.
-- Sin `localStorage` para datos personales.
-- Sin `dangerouslySetInnerHTML`.
-- URLs externas validadas.
-- Enlaces externos con `noopener noreferrer`.
-- Fetch con `AbortController` y timeout.
-- CSP y referrer policy en `index.html`.
-- GitHub Pages no permite configurar encabezados HTTP como `frame-ancestors`; el proyecto aplica la CSP posible mediante meta tag.
-
-## Motion
-
-Las animaciones usan GSAP instalado por npm, no CDN. La capa de motion está en `src/presentation/hooks/useGsapLandingMotion.ts` y utiliza `@gsap/react`, `ScrollTrigger`, scopes por ref, cleanup automático, transforms/opacity y `prefers-reduced-motion`. El carrusel mueve solo su viewport horizontal y no modifica el scroll vertical de la página durante autoplay.
-
-## Accesibilidad
-
-Incluye skip link, landmarks, un solo `h1` por página, foco visible, labels visibles, errores inline, `aria-live`, menú móvil accesible, FAQ con botones, carrusel navegable y soporte de `prefers-reduced-motion`.
+`npm run validate` runs lint, typecheck, unit tests and build.
 
 ## GitHub Pages
 
-Vite usa:
+The production build uses:
 
 ```ts
 base: '/NativasApp/'
 ```
 
-El deploy publica `dist` mediante GitHub Pages. El formulario recibe variables públicas desde repository variables, no desde secretos de base de datos.
+The deploy workflow builds `dist/` and publishes it to GitHub Pages. Configure `VITE_PUBLIC_SITE_URL` as:
 
-## Limitaciones reales
+```env
+https://noisgit.github.io/NativasApp/
+```
 
-- Instagram no puede sincronizarse de forma segura en tiempo real desde una SPA estática sin exponer tokens.
-- Algunos horarios provienen del repositorio original; si cambian, deben actualizarse manualmente y revisar Instagram.
-- Las imágenes locales deben mantenerse verificables como assets oficiales o editoriales de Nativas.
+## Form Flow
+
+The application form asks for:
+
+- full name;
+- email;
+- international phone number;
+- birth date;
+- city or comuna;
+- optional pronouns;
+- prior experience;
+- training availability;
+- motivation;
+- privacy acceptance;
+- honeypot and form start timestamp.
+
+Validation lives in `src/domain/application/applicationForm.ts`. The HTTP gateway lives in `src/infrastructure/form/HttpApplicationSubmissionGateway.ts` and applies endpoint checks, timeout handling and abort support.
+
+## Media Management
+
+Central media references live in `src/infrastructure/content/siteMedia.ts`. Replace files there without changing component imports.
+
+Current replaceable files:
+
+- `src/assets/media/nativas-hero.webp`
+- `src/assets/media/nativas-about.webp`
+- `src/assets/instagram/nativas-bench.webp`
+- `src/assets/instagram/nativas-pack.webp`
+- `src/assets/instagram/nativas-game-red.webp`
+- `src/assets/instagram/nativas-community.webp`
+- `src/assets/instagram/nativas-unidas.webp`
+
+Hero image source used in this revision: `WhatsApp Image 2026-06-19 at 22.52.54.jpeg`, optimized into `src/assets/media/nativas-hero.webp`.
+
+## Updating Instagram Cards
+
+1. Save the verified image locally under `src/assets/instagram/`.
+2. Optimize it to WebP.
+3. Import it in `src/infrastructure/content/siteMedia.ts`.
+4. Add or update the object in `src/infrastructure/content/instagramPostsRepository.ts`.
+5. Use an official Instagram permalink under `https://www.instagram.com/`.
+6. Write concise alt text and a short description.
+
+Do not duplicate photos just to fill the carousel. If there are too few cards to scroll, the carousel automatically hides extra controls and disables autoplay.
+
+## Motion
+
+GSAP is used through React-scoped hooks. Motion includes hero reveal, image scale, subtle parallax, section reveals, card staggers and carousel microinteractions. Reduced motion disables autoplay/parallax-style movement and keeps the content visible.
+
+## Security Notes
+
+- No secrets are stored in frontend code.
+- No personal form data is stored in `localStorage`.
+- External URLs are validated in domain helpers.
+- Instagram links use `target="_blank"` with `rel="noopener noreferrer"`.
+- React escapes visible text; captions are not rendered as HTML.
+- Form input lengths are limited and normalized before submission.
+- The app uses a conservative CSP meta tag compatible with GitHub Pages.
+
+## Accessibility
+
+- Skip link and semantic landmarks.
+- Sticky header with keyboard-accessible mobile menu.
+- Visible focus states.
+- Proper labels, hints and inline errors.
+- FAQ buttons use `aria-expanded` and `aria-controls`.
+- Carousel controls are keyboard-accessible; cloned slides are hidden from assistive technologies and removed from tab order.
+- Reduced-motion behavior is tested.
+
+## Testing
+
+Coverage includes domain validation, form behavior, phone normalization, pronouns, header/footer navigation, carousel behavior, reduced motion, horizontal overflow checks, and README preview dimensions.
+
+Run everything before release:
+
+```bash
+npm ci
+npm run lint
+npm run typecheck
+npm run test:run
+npm run test:e2e
+npm run build
+npm audit
+```
+
+## Production Checklist
+
+- `VITE_APPLICATION_FORM_ENDPOINT` configured in the deployment environment.
+- `VITE_PUBLIC_SITE_URL` set to `https://noisgit.github.io/NativasApp/`.
+- Public images optimized and stored locally.
+- Instagram permalinks verified.
+- No secrets committed.
+- All validation commands pass.

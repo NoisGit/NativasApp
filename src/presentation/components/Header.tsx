@@ -1,21 +1,17 @@
 import { Menu, X } from 'lucide-react'
 import { useEffect, useId, useState } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { siteMedia } from '../../infrastructure/content/siteMedia'
 import { siteConfig } from '../../shared/config/siteConfig'
-
-function scrollToSection (hash: string) {
-  window.requestAnimationFrame(() => {
-    document.getElementById(hash)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  })
-}
+import { useSectionNavigation } from '../hooks/useSectionNavigation'
 
 export function Header () {
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [activeSection, setActiveSection] = useState('inicio')
   const menuId = useId()
-  const navigate = useNavigate()
   const location = useLocation()
+  const goToSection = useSectionNavigation()
 
   useEffect(() => setOpen(false), [location.pathname])
 
@@ -28,20 +24,31 @@ export function Header () {
   }, [])
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 16)
+    const onScroll = () => {
+      setScrolled(window.scrollY > 16)
+      if (location.pathname !== '/') return
+
+      const current = siteConfig.navigation
+        .map((item) => document.getElementById(item.hash))
+        .filter(Boolean)
+        .reduce((closest, section) => {
+          if (!section) return closest
+          const distance = Math.abs(section.getBoundingClientRect().top - 120)
+          if (!closest || distance < closest.distance) return { id: section.id, distance }
+          return closest
+        }, null as null | { id: string, distance: number })
+
+      if (current) setActiveSection(current.id)
+    }
+
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
-  }, [])
+  }, [location.pathname])
 
   const goTo = (hash: string) => {
     setOpen(false)
-    if (location.pathname !== '/') {
-      navigate('/')
-      window.setTimeout(() => scrollToSection(hash), 80)
-      return
-    }
-    scrollToSection(hash)
+    goToSection(hash)
   }
 
   return (
@@ -53,7 +60,14 @@ export function Header () {
 
         <nav className='desktop-nav' aria-label='Navegación principal'>
           {siteConfig.navigation.map((item) => (
-            <button key={item.hash} onClick={() => goTo(item.hash)}>{item.label}</button>
+            <button
+              key={item.hash}
+              className={activeSection === item.hash && location.pathname === '/' ? 'is-active' : ''}
+              aria-current={activeSection === item.hash && location.pathname === '/' ? 'page' : undefined}
+              onClick={() => goTo(item.hash)}
+            >
+              {item.label}
+            </button>
           ))}
         </nav>
 

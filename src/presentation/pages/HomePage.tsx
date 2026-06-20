@@ -7,10 +7,12 @@ import { Faq } from '../components/Faq'
 import { InstagramCarousel } from '../components/InstagramCarousel'
 import { useGsapLandingMotion } from '../hooks/useGsapLandingMotion'
 import { usePageMeta } from '../hooks/usePageMeta'
+import { useSectionNavigation } from '../hooks/useSectionNavigation'
 
 export function HomePage () {
   usePageMeta('Nativas Roller Derby | Temuco', 'Nativas Roller Derby en Temuco: patinaje, comunidad, entrenamientos y postulación.')
   const motionScope = useGsapLandingMotion()
+  const goToSection = useSectionNavigation()
 
   return (
     <div ref={motionScope}>
@@ -21,15 +23,15 @@ export function HomePage () {
           <p className='lead'>Nativas Roller Derby reúne aprendizaje progresivo, comunicación y comunidad para vivir el roller derby con respeto, constancia y energía de equipo.</p>
           <div className='button-row'>
             <Link className='button button--primary' to='/postular'>Postula <ArrowRight size={18} aria-hidden='true' /></Link>
-            <a className='button button--secondary' href='#nativas'>Conoce a Nativas</a>
+            <button className='button button--secondary' type='button' onClick={() => goToSection('nativas')}>Conoce a Nativas</button>
           </div>
           <p className='hero__meta'>Postulación desde {siteConfig.minimumAge} años. Experiencia previa no obligatoria.</p>
         </div>
-        <div className='hero__stage' aria-label='Fotografía de Nativas Roller Derby en pista'>
+        <div className='hero__stage' aria-label='Fotografía destacada de roller derby en Temuco'>
           <span className='hero__orb hero__orb--one' aria-hidden='true' />
           <span className='hero__orb hero__orb--two' aria-hidden='true' />
           <figure className='hero__media'>
-            <img src={siteMedia.heroPhoto} alt='Integrantes de Nativas Roller Derby posando con patines en una cancha techada' width='1018' height='1204' />
+            <img src={siteMedia.heroPhoto} alt='Tres deportistas de Temuco vinculados al roller derby representando a Chile en una publicación regional' width='1010' height='1267' />
           </figure>
         </div>
       </section>
