@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://noisgit.github.io/NativasApp/sitemap.xml

@@ -21,17 +21,24 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version-file: .nvmrc
+          node-version: 22
           cache: npm
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Run lint
+      - name: Lint
         run: npm run lint
 
-      - name: Build project
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Unit and interaction tests
+        run: npm run test:run
+
+      - name: Build
         run: npm run build
         env:
-          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
+          VITE_PUBLIC_SITE_URL: https://noisgit.github.io/NativasApp/
+          VITE_APPLICATION_FORM_ENDPOINT: ${{ vars.VITE_APPLICATION_FORM_ENDPOINT }}
+          VITE_FORM_PROVIDER: formspree

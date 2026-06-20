@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  content: ['./index.html', './src/**/*.{ts,tsx}'],
   theme: {
     extend: {
       colors: {
@@ -14,15 +14,8 @@ export default {
           mist: '#CBD5E1',
           border: '#2C2F38'
         }
-      },
-      boxShadow: {
-        'nativas-glow': '0 0 40px rgba(102, 221, 219, 0.18)'
-      },
-      fontFamily: {
-        caveat: ['Caveat', 'cursive'],
-        marvel: ['Marvel', 'sans-serif'],
-        mplus: ["'M PLUS 1 Code'", 'sans-serif']
       }
     }
-  }
+  },
+  plugins: []
 }

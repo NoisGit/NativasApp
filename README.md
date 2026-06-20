@@ -1,153 +1,169 @@
-# NativasApp
+# Nativas Roller Derby
 
-NativasApp is a modern recruitment landing page for a roller derby team. The goal is to present the team, share news, explain how to join, and receive applications through a polished frontend experience.
+Landing page profesional para Nativas Roller Derby, equipo de roller derby de Temuco, Chile. El proyecto está preparado para portfolio y despliegue estático en GitHub Pages:
 
-## Project status
-
-This project is being rebuilt as a portfolio-ready MVP.
-
-Current focus:
-
-- Modern landing page.
-- Recruitment application flow.
-- Team news section.
-- Supabase integration.
-- GitHub Pages deployment.
-- Clean documentation and frontend best practices.
-
-## Live preview
-
-Expected GitHub Pages URL:
-
-```txt
 https://noisgit.github.io/NativasApp/
-```
 
-## Tech stack
+## Objetivo
 
-- React
+Transformar el proyecto en una experiencia frontend completa: identidad visual, contenido educativo, entrenamientos, galería editorial de Instagram, formulario de postulación, privacidad, accesibilidad, SEO, seguridad frontend y validaciones.
+
+No existe base de datos, backend propio, autenticación ni panel administrativo.
+
+## Funcionalidades
+
+- Landing pública con secciones de Nativas, roller derby, roles, beneficios, preparación, entrenamientos, Instagram, proceso, FAQ y CTA.
+- Rutas públicas: `/`, `/postular`, `/privacidad` usando `HashRouter` para compatibilidad con GitHub Pages.
+- Formulario de postulación con validación de dominio, teléfono chileno normalizado, edad mínima, disponibilidad, motivación, privacidad, honeypot y prevención de doble envío.
+- Envío real mediante endpoint público configurable: `VITE_APPLICATION_FORM_ENDPOINT`.
+- Galería editorial local basada en publicaciones públicas de Instagram, sin tokens ni scraping runtime.
+- Carrusel con autoplay, anterior/siguiente, indicadores, pausa por hover/focus/visibilidad, teclado, swipe y reduced motion.
+- SEO con Open Graph, Twitter Card, canonical, robots, sitemap, JSON-LD y favicon.
+- CI y deploy con GitHub Actions.
+
+## Stack
+
+- React 18
+- TypeScript estricto
 - Vite
 - Tailwind CSS
 - React Router
-- Supabase, planned for the MVP backend
-- TypeScript, planned as a progressive migration
+- Lucide React
+- Vitest
+- React Testing Library
+- Playwright
+- ESLint
 
-## Requirements
+## Arquitectura DDD pragmática
 
-This is a frontend project, so it does not use `requirements.txt`. Python projects usually use that file. This app uses `package.json` and `package-lock.json` to manage dependencies.
+```text
+src/
+  domain/
+    application/
+    instagram/
+    shared/
+  application/
+    application-form/
+    instagram-gallery/
+  infrastructure/
+    content/
+    form/
+  presentation/
+    components/
+    hooks/
+    layouts/
+    pages/
+  shared/
+    config/
+  assets/
+    brand/
+    gallery/
+    instagram/
+```
 
-Recommended tools:
+`domain` contiene reglas puras. `application` contiene casos de uso. `infrastructure` contiene adaptadores y contenido local. `presentation` contiene React, estados visuales e interacción.
 
-- Node.js 20
-- npm
-
-If you use nvm:
+## Instalación
 
 ```bash
-nvm use
+npm ci
 ```
 
-## Environment variables
-
-Create a `.env` file using `.env.example` as reference:
-
-```env
-VITE_SUPABASE_URL=
-VITE_SUPABASE_PUBLISHABLE_KEY=
-VITE_APPLICATION_FORM_ENDPOINT=
-```
-
-Do not commit real environment values.
-
-## Application form email flow
-
-The application form is prepared to send submissions through an external form endpoint, such as Formspree.
-
-Recommended setup:
-
-1. Create a form endpoint in the selected provider.
-2. Connect that endpoint to the final recipient email from the project owner.
-3. Add the endpoint locally as `VITE_APPLICATION_FORM_ENDPOINT`.
-4. Add the same value as a GitHub repository secret before deploying.
-
-## Local setup
-
-Install dependencies:
-
-```bash
-npm install
-```
-
-Run development server:
+## Desarrollo
 
 ```bash
 npm run dev
 ```
 
-Create production build:
-
-```bash
-npm run build
-```
-
-Preview production build locally:
-
-```bash
-npm run preview
-```
-
-Run lint:
+## Validación
 
 ```bash
 npm run lint
+npm run typecheck
+npm run test:run
+npm run build
+npm run test:e2e
+npm run validate
 ```
 
-## Quality checks
+`lint` no modifica archivos. Para autocorrecciones explícitas existe `npm run lint:fix`.
 
-Pull requests to `develop` and `main` run a CI workflow with:
+## Variables públicas
 
-- dependency installation
-- lint
-- production build
-
-## Branch workflow
-
-- `main`: stable production branch.
-- `develop`: integration branch.
-- Pull requests must target `develop`.
-- Production changes move from `develop` to `main` only after review and validation.
-
-## Roadmap
-
-- [ ] Normalize branch workflow.
-- [ ] Define final frontend architecture.
-- [ ] Set up Supabase.
-- [ ] Build modern landing page.
-- [ ] Create recruitment application form.
-- [ ] Add team news section.
-- [ ] Add admin MVP.
-- [ ] Configure GitHub Pages.
-- [ ] Add CI and tests.
-- [ ] Polish responsive design and accessibility.
-
-## Deployment
-
-The app is prepared to deploy with GitHub Pages through GitHub Actions.
-
-### GitHub Pages setup
-
-1. Open repository settings.
-2. Go to Pages.
-3. Set source to GitHub Actions.
-4. Add repository secrets:
-   - `VITE_SUPABASE_URL`
-   - `VITE_SUPABASE_PUBLISHABLE_KEY`
-   - `VITE_APPLICATION_FORM_ENDPOINT`
-5. Merge validated production changes into `main`.
-6. The deploy workflow will build the app and publish the `dist` folder.
-
-The Vite base path is configured for:
-
-```txt
-/NativasApp/
+```env
+VITE_APPLICATION_FORM_ENDPOINT=
+VITE_PUBLIC_SITE_URL=https://noisgit.github.io/NativasApp/
+VITE_FORM_PROVIDER=formspree
 ```
+
+Todas las variables `VITE_*` son públicas. No deben contener secretos, tokens privados, service roles ni credenciales.
+
+## Formulario
+
+El formulario no guarda datos en el sitio. Envía un `POST` JSON al endpoint público configurado. Si el endpoint no existe o no es HTTPS, el sitio muestra un error amigable y no simula éxito.
+
+El proveedor puede ser Formspree, Getform u otro servicio compatible con `fetch`.
+
+## Galería de Instagram
+
+La galería vive en:
+
+```text
+src/infrastructure/content/instagramPostsRepository.ts
+```
+
+Para actualizar una publicación:
+
+1. Descarga una imagen pública y verificable desde el Instagram oficial de Nativas, sin capturar la interfaz de Instagram.
+2. Optimízala para web y guárdala en `src/assets/instagram/` o `src/assets/gallery/`.
+3. Importa la imagen en el repositorio.
+4. Agrega un objeto con `title`, `description`, `image`, `alt`, `mediaType` y `permalink`.
+5. Verifica que el permalink sea HTTPS y pertenezca a `instagram.com`.
+
+La sección no es un feed en vivo y no usa Instagram Graph API porque este sitio se despliega como frontend estático.
+
+## Logos e identidad
+
+Los logos locales están en:
+
+```text
+src/assets/brand/nativas-logo-primary.png
+src/assets/brand/nativas-logo-symbol.png
+public/favicon.png
+public/og-image.png
+```
+
+No se usa una “N” provisional ni un logo inventado. Si se obtiene una variante oficial adicional, se reemplaza en `src/assets/brand/` sin cambiar componentes.
+
+## Seguridad frontend
+
+- Sin Supabase, Firebase, base de datos, auth ni panel admin.
+- Sin secretos en frontend.
+- Sin tokens de Instagram.
+- Sin `localStorage` para datos personales.
+- Sin `dangerouslySetInnerHTML`.
+- URLs externas validadas.
+- Enlaces externos con `noopener noreferrer`.
+- Fetch con `AbortController` y timeout.
+- CSP y referrer policy en `index.html`.
+- GitHub Pages no permite configurar encabezados HTTP como `frame-ancestors`; el proyecto aplica la CSP posible mediante meta tag.
+
+## Accesibilidad
+
+Incluye skip link, landmarks, un solo `h1` por página, foco visible, labels visibles, errores inline, `aria-live`, menú móvil accesible, FAQ con botones, carrusel navegable y soporte de `prefers-reduced-motion`.
+
+## GitHub Pages
+
+Vite usa:
+
+```ts
+base: '/NativasApp/'
+```
+
+El deploy publica `dist` mediante GitHub Pages. El formulario recibe variables públicas desde repository variables, no desde secretos de base de datos.
+
+## Limitaciones reales
+
+- Instagram no puede sincronizarse de forma segura en tiempo real desde una SPA estática sin exponer tokens.
+- Algunos horarios provienen del repositorio original; si cambian, deben actualizarse manualmente y revisar Instagram.
+- Las imágenes locales deben mantenerse verificables como assets oficiales o editoriales de Nativas.

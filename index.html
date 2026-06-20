@@ -1,22 +1,44 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Caveat&family=M+PLUS+1+Code:wght@100;400;700&family=Marvel:wght@400;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
-            rel="stylesheet"
-        />
-        <title>Nativas</title>
-    </head>
-
-    <body>
-        <div id="root"></div>
-        <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
-        <script type="module" src="/src/main.jsx"></script>
-        <!-- <script type="module" src = '/src/firebase.js'></script> -->
-    </body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self' https:; base-uri 'self'; form-action 'self' https:; upgrade-insecure-requests" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="theme-color" content="#0D1015" />
+    <meta name="description" content="Nativas Roller Derby en Temuco: patinaje, comunidad, entrenamientos, roller derby y postulación mediante formulario externo configurable." />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://noisgit.github.io/NativasApp/" />
+    <link rel="icon" type="image/png" href="/NativasApp/favicon.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Nativas Roller Derby | Temuco" />
+    <meta property="og:description" content="Landing frontend estática de Nativas Roller Derby: comunidad, entrenamientos, Instagram editorial y postulación." />
+    <meta property="og:url" content="https://noisgit.github.io/NativasApp/" />
+    <meta property="og:image" content="https://noisgit.github.io/NativasApp/og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Nativas Roller Derby | Temuco" />
+    <meta name="twitter:description" content="Roller derby, patinaje y comunidad desde Temuco." />
+    <meta name="twitter:image" content="https://noisgit.github.io/NativasApp/og-image.png" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SportsOrganization",
+        "name": "Nativas Roller Derby",
+        "url": "https://noisgit.github.io/NativasApp/",
+        "logo": "https://noisgit.github.io/NativasApp/og-image.png",
+        "sameAs": ["https://www.instagram.com/nativas_rollerderby/"],
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Temuco",
+          "addressCountry": "CL"
+        },
+        "sport": "Roller derby"
+      }
+    </script>
+    <title>Nativas Roller Derby | Temuco</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>
