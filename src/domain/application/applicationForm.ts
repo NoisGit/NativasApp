@@ -63,9 +63,21 @@ export function normalizeInternationalPhone (value: string, defaultCountry: Coun
   return parsed?.isValid() ? parsed.number : null
 }
 
+function parseIsoDate (value: string): Date | null {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value)
+  if (!match) return null
+  const [, yearValue, monthValue, dayValue] = match
+  const year = Number(yearValue)
+  const month = Number(monthValue)
+  const day = Number(dayValue)
+  const date = new Date(year, month - 1, day)
+  const isRealDate = date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day
+  return isRealDate ? date : null
+}
+
 export function calculateAge (birthDate: string, today = new Date()): number | null {
-  const date = new Date(`${birthDate}T00:00:00`)
-  if (!birthDate || Number.isNaN(date.getTime())) return null
+  const date = parseIsoDate(birthDate)
+  if (!date) return null
   let age = today.getFullYear() - date.getFullYear()
   const hasBirthdayPassed =
     today.getMonth() > date.getMonth() ||
@@ -92,8 +104,10 @@ export function validateApplicationForm (input: ApplicationFormInput, today = ne
   if (email.length > 160) errors.email = 'El correo es demasiado largo.'
   if (!phone) errors.phone = 'Ingresa un teléfono válido con código de país.'
 
-  if (age === null) errors.birthDate = 'Ingresa una fecha de nacimiento válida.'
-  else if (new Date(`${input.birthDate}T00:00:00`) > today) errors.birthDate = 'La fecha no puede estar en el futuro.'
+  const birthDate = parseIsoDate(input.birthDate)
+
+  if (age === null || !birthDate) errors.birthDate = 'Ingresa una fecha de nacimiento válida.'
+  else if (birthDate > today) errors.birthDate = 'La fecha no puede estar en el futuro.'
   else if (age < siteConfig.minimumAge) errors.birthDate = `Debes tener al menos ${siteConfig.minimumAge} años.`
 
   if (pronouns && !pronounOptions.includes(pronouns as PronounOption)) errors.pronouns = 'Selecciona una opción válida.'

@@ -35,8 +35,15 @@ describe('application domain', () => {
     expect(result.isValid).toBe(true)
     expect(result.data?.email).toBe('persona@mail.cl')
     expect(result.data?.phone).toBe('+56912345678')
+    expect(result.data?.birthDate).toBe('1994-05-20')
     expect(result.data).not.toHaveProperty('contactPreference')
     expect(result.data).not.toHaveProperty('city')
+  })
+
+  it('rejects impossible, future and underage birth dates', () => {
+    expect(validateApplicationForm({ ...validForm, birthDate: '2000-02-31' }).errors.birthDate).toMatch(/válida/i)
+    expect(validateApplicationForm({ ...validForm, birthDate: '3000-01-01' }, new Date('2026-06-22T12:00:00')).errors.birthDate).toMatch(/futuro/i)
+    expect(validateApplicationForm({ ...validForm, birthDate: '2010-06-23' }, new Date('2026-06-22T12:00:00')).errors.birthDate).toMatch(/18 años/i)
   })
 
   it('accepts pronouns and normalizes the custom option', () => {

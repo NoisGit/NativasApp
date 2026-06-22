@@ -55,7 +55,7 @@ export function Header () {
     <header className={`site-header ${scrolled ? 'is-scrolled' : ''}`}>
       <div className='site-header__inner'>
         <button className='brand-link' onClick={() => goTo('inicio')} aria-label='Ir al inicio'>
-          <img src={siteMedia.logoHeader} alt='Nativas Roller Derby' width='716' height='341' />
+          <img src={siteMedia.logoHeader} alt='Nativas Roller Derby' width='640' height='180' />
         </button>
 
         <nav className='desktop-nav' aria-label='Navegación principal'>

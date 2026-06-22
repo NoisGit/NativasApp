@@ -2,11 +2,19 @@ import { fireEvent, render, screen, waitFor, within } from '@testing-library/rea
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 import { App } from '../src/App'
+import { siteMedia } from '../src/infrastructure/content/siteMedia'
 
 describe('home interactions', () => {
-  it('renders the official logo only in the header, navigation, CTA and footer Instagram link', () => {
+  it('renders compact SVG logo variants, navigation, CTA and footer Instagram link', () => {
     render(<App />)
-    expect(screen.getAllByAltText('Nativas Roller Derby')).toHaveLength(2)
+    const logos = screen.getAllByAltText('Nativas Roller Derby')
+    expect(logos).toHaveLength(2)
+    expect(siteMedia.replaceableFiles).toContain('src/assets/brand/nativas-logo-header-compact.svg')
+    expect(siteMedia.replaceableFiles).toContain('src/assets/brand/nativas-logo-footer-compact.svg')
+    expect(logos[0]).toHaveAttribute('src', expect.stringContaining('data:image/svg+xml'))
+    expect(logos[1]).toHaveAttribute('src', expect.stringContaining('data:image/svg+xml'))
+    expect(logos[0]).toHaveAttribute('width', '640')
+    expect(logos[1]).toHaveAttribute('height', '180')
     expect(screen.getByRole('heading', { name: /Patinaje, estrategia/i })).toBeInTheDocument()
     expect(screen.getAllByRole('link', { name: /Postula/i })[0]).toHaveAttribute('href', '#/postular')
 
@@ -18,6 +26,7 @@ describe('home interactions', () => {
     expect(footerInstagram).toHaveAttribute('href', 'https://www.instagram.com/nativas_rollerderby/')
     expect(footerInstagram).toHaveAttribute('rel', 'noopener noreferrer')
     expect(screen.getByRole('link', { name: /Privacidad/i })).toHaveAttribute('href', '#/privacidad')
+    expect(within(screen.getByRole('contentinfo')).queryByRole('heading', { name: 'Nativas' })).not.toBeInTheDocument()
   })
 
   it('uses route-safe section navigation for Conoce a Nativas', async () => {
@@ -53,7 +62,7 @@ describe('home interactions', () => {
     expect(button).toHaveAttribute('aria-expanded', 'false')
   })
 
-  it('renders Instagram cards with safe external links, hidden clones and marquee pause control', async () => {
+  it('renders Instagram cards with safe external links, hidden clones and no pause control', () => {
     const originalMatchMedia = window.matchMedia
     Object.defineProperty(window, 'matchMedia', {
       writable: true,
@@ -68,7 +77,6 @@ describe('home interactions', () => {
         dispatchEvent: () => false
       })
     })
-    const user = userEvent.setup()
     const { container, unmount } = render(<App />)
 
     try {
@@ -84,10 +92,8 @@ describe('home interactions', () => {
       const hiddenCloneLinks = container.querySelectorAll('.carousel__group[aria-hidden="true"] .instagram-card[tabindex="-1"]')
       expect(hiddenCloneLinks.length).toBeGreaterThan(0)
 
-      const pause = screen.getByRole('button', { name: /Pausar carrusel/i })
-      expect(pause).toHaveAttribute('aria-pressed', 'false')
-      await user.click(pause)
-      await waitFor(() => expect(screen.getByRole('button', { name: /Reanudar carrusel/i })).toHaveAttribute('aria-pressed', 'true'))
+      expect(screen.queryByRole('button', { name: /Pausar carrusel/i })).not.toBeInTheDocument()
+      expect(screen.queryByRole('button', { name: /Reanudar carrusel/i })).not.toBeInTheDocument()
     } finally {
       unmount()
       Object.defineProperty(window, 'matchMedia', {

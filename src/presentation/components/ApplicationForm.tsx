@@ -151,7 +151,7 @@ export function ApplicationForm () {
           <input id='email' name='email' type='email' autoComplete='email' maxLength={160} value={form.email} onChange={(event) => update('email', event.target.value)} aria-invalid={Boolean(errors.email)} aria-describedby='email-hint email-error' />
         </Field>
 
-        <Field label='Fecha de nacimiento' name='birthDate' error={errors.birthDate} hint={`Postulación desde ${siteConfig.minimumAge} años.`}>
+        <Field label='Fecha de nacimiento' name='birthDate' error={errors.birthDate} hint={`Formato: DD/MM/AAAA. Postulación desde ${siteConfig.minimumAge} años.`}>
           <BirthDatePicker
             id='birthDate'
             name='birthDate'

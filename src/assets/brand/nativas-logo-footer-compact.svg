@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 180" role="img" aria-labelledby="title">
+  <title id="title">Nativas Roller Derby</title>
+  <defs>
+    <linearGradient id="letterFill" x1="0" x2="0" y1="38" y2="142" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset=".48" stop-color="#ffffff"/>
+      <stop offset=".54" stop-color="#76f8f8"/>
+      <stop offset=".76" stop-color="#45bfd9"/>
+      <stop offset="1" stop-color="#4b6dff"/>
+    </linearGradient>
+    <filter id="cyanTrace" x="-8%" y="-18%" width="116%" height="136%" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="0" stdDeviation="1.5" flood-color="#66dddb" flood-opacity=".95"/>
+      <feDropShadow dx="2" dy="3" stdDeviation="0" flood-color="#2f2eb0" flood-opacity=".85"/>
+    </filter>
+  </defs>
+  <g filter="url(#cyanTrace)">
+    <path
+      fill="#05070b"
+      stroke="#66dddb"
+      stroke-linejoin="round"
+      stroke-width="3"
+      d="M46 124 74 57c77-20 159-31 246-31s169 11 246 31l28 67c-79-13-170-20-274-20S125 111 46 124Z"
+    />
+    <path
+      fill="#05070b"
+      stroke="#66dddb"
+      stroke-linejoin="round"
+      stroke-width="2.4"
+      d="M320 18 334 58 365 28 361 72 408 46 386 84 443 73 402 100 455 121 398 120 423 154 370 134 357 166 334 128 320 162 306 128 283 166 270 134 217 154 242 120 185 121 238 100 197 73 254 84 232 46 279 72 275 28 306 58Z"
+    />
+    <text
+      x="320"
+      y="121"
+      text-anchor="middle"
+      fill="url(#letterFill)"
+      stroke="#05070b"
+      stroke-width="13"
+      paint-order="stroke fill"
+      font-family="Georgia, 'Times New Roman', serif"
+      font-size="83"
+      font-weight="900"
+      letter-spacing="-1"
+      textLength="520"
+      lengthAdjust="spacingAndGlyphs"
+      transform="skewX(-7 320 90)"
+    >NATIVAS</text>
+    <path
+      fill="#05070b"
+      d="M61 132c70-15 157-23 259-23s189 8 259 23l-8 18c-75-13-159-19-251-19s-176 6-251 19Z"
+      opacity=".98"
+    />
+  </g>
+</svg>

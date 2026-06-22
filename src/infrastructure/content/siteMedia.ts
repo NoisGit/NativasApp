@@ -1,5 +1,5 @@
-import logoHeader from '../../assets/brand/nativas-logo-header-horizontal.webp'
-import logoFooter from '../../assets/brand/nativas-logo-footer-horizontal.webp'
+import logoHeader from '../../assets/brand/nativas-logo-header-compact.svg'
+import logoFooter from '../../assets/brand/nativas-logo-footer-compact.svg'
 import heroPhoto from '../../assets/media/nativas-hero.webp'
 import aboutPhoto from '../../assets/media/nativas-about.webp'
 import benchPhoto from '../../assets/instagram/nativas-bench.webp'
@@ -23,6 +23,8 @@ export const siteMedia = {
   replaceableFiles: [
     'src/assets/media/nativas-hero.webp',
     'src/assets/media/nativas-about.webp',
+    'src/assets/brand/nativas-logo-header-compact.svg',
+    'src/assets/brand/nativas-logo-footer-compact.svg',
     'src/assets/instagram/nativas-bench.webp',
     'src/assets/instagram/nativas-pack.webp',
     'src/assets/instagram/nativas-game-red.webp',

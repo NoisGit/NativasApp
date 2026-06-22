@@ -1,8 +1,6 @@
-import { Pause, Play } from 'lucide-react'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import type { FocusEvent } from 'react'
 import { GetInstagramPosts } from '../../application/instagram-gallery/GetInstagramPosts'
 import { instagramPostsRepository } from '../../infrastructure/content/instagramPostsRepository'
 import { siteConfig } from '../../shared/config/siteConfig'
@@ -41,12 +39,9 @@ export function InstagramCarousel () {
   const trackRef = useRef<HTMLDivElement | null>(null)
   const firstGroupRef = useRef<HTMLDivElement | null>(null)
   const tweenRef = useRef<gsap.core.Tween | null>(null)
-  const [manualPaused, setManualPaused] = useState(false)
-  const [hoverPaused, setHoverPaused] = useState(false)
-  const [focusPaused, setFocusPaused] = useState(false)
   const [hidden, setHidden] = useState(() => document.hidden)
   const canMove = posts.length > 1 && !reducedMotion
-  const isPaused = manualPaused || hoverPaused || focusPaused || hidden || reducedMotion
+  const isPaused = hidden || reducedMotion
 
   const applyPlayback = (paused: boolean, duration = 0.35) => {
     const tween = tweenRef.current
@@ -108,15 +103,6 @@ export function InstagramCarousel () {
     return () => document.removeEventListener('visibilitychange', onVisibility)
   }, [])
 
-  const onFocusCapture = (event: FocusEvent<HTMLDivElement>) => {
-    if ((event.target as HTMLElement).closest('.instagram-card')) setFocusPaused(true)
-  }
-
-  const onBlurCapture = (event: FocusEvent<HTMLDivElement>) => {
-    const nextTarget = event.relatedTarget as HTMLElement | null
-    if (!nextTarget?.closest('.instagram-card')) setFocusPaused(false)
-  }
-
   return (
     <section id='instagram' className='section section--accent' aria-labelledby='instagram-title'>
       <div className='section__header'>
@@ -130,10 +116,6 @@ export function InstagramCarousel () {
         data-marquee-paused={isPaused || hidden || reducedMotion}
         data-marquee-speed={MARQUEE_SPEED_PX_PER_SECOND}
         ref={rootRef}
-        onMouseEnter={() => setHoverPaused(true)}
-        onMouseLeave={() => setHoverPaused(false)}
-        onFocusCapture={onFocusCapture}
-        onBlurCapture={onBlurCapture}
       >
         <div className='carousel__viewport' aria-label='Carrusel continuo de publicaciones de Instagram'>
           <div className='carousel__track' ref={trackRef} data-testid='instagram-marquee-track'>
@@ -156,17 +138,6 @@ export function InstagramCarousel () {
           </div>
         </div>
 
-        {canMove && (
-          <button
-            className='carousel__pause'
-            type='button'
-            aria-pressed={manualPaused}
-            onClick={() => setManualPaused((paused) => !paused)}
-          >
-            {manualPaused ? <Play size={16} aria-hidden='true' /> : <Pause size={16} aria-hidden='true' />}
-            <span>{manualPaused ? 'Reanudar carrusel' : 'Pausar carrusel'}</span>
-          </button>
-        )}
       </div>
 
       <div className='section__actions'>

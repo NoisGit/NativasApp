@@ -20,9 +20,7 @@ export function Footer () {
     <footer className='footer'>
       <div className='footer__inner'>
         <div className='footer__brand'>
-          <img src={siteMedia.logoFooter} alt='Nativas Roller Derby' width='232' height='155' />
-          <h2>{siteConfig.name}</h2>
-          <p>Roller derby, patinaje, estrategia y comunidad desde el sur de Chile.</p>
+          <img src={siteMedia.logoFooter} alt='Nativas Roller Derby' width='640' height='180' />
           <p className='footer__location'><MapPin size={18} aria-hidden='true' /> {siteConfig.location}</p>
         </div>
 

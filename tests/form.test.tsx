@@ -6,7 +6,7 @@ import { siteConfig } from '../src/shared/config/siteConfig'
 
 
 async function selectBirthDate (user: ReturnType<typeof userEvent.setup>) {
-  await user.click(screen.getByRole('button', { name: /Fecha de nacimiento/i }))
+  await user.click(screen.getByRole('button', { name: /Abrir calendario de fecha de nacimiento/i }))
   const dialog = screen.getByRole('dialog', { name: /Seleccionar fecha de nacimiento/i })
   const dropdowns = within(dialog).getAllByRole('combobox')
   await user.selectOptions(dropdowns[0], '4')
@@ -94,12 +94,57 @@ describe('application form', () => {
 
   it('opens the birth date picker, selects a valid date and closes with Escape', async () => {
     const user = await goToForm()
-    const trigger = screen.getByRole('button', { name: /Fecha de nacimiento/i })
+    const input = screen.getByRole('textbox', { name: /^Fecha de nacimiento$/i })
+    const trigger = screen.getByRole('button', { name: /Abrir calendario de fecha de nacimiento/i })
     await user.click(trigger)
     expect(screen.getByRole('dialog', { name: /Seleccionar fecha de nacimiento/i })).toBeInTheDocument()
     await user.keyboard('{Escape}')
     expect(screen.queryByRole('dialog', { name: /Seleccionar fecha de nacimiento/i })).not.toBeInTheDocument()
     await selectBirthDate(user)
-    expect(trigger).toHaveTextContent(/20 de mayo de 1994/i)
+    expect(input).toHaveValue('20/05/1994')
+  })
+
+  it('accepts manual DD/MM/AAAA input, normalizes to ISO and synchronizes the calendar', async () => {
+    siteConfig.formEndpoint = 'https://forms.example.test/nativas'
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true }))
+    const user = await goToForm()
+    await user.type(screen.getByLabelText(/Nombre completo/i), 'Persona Postulante')
+    await user.type(screen.getByLabelText(/Correo/i), 'persona@mail.cl')
+    await user.type(screen.getByLabelText(/Teléfono/i), '912345678')
+    await user.type(screen.getByRole('textbox', { name: /^Fecha de nacimiento$/i }), '20051994')
+    expect(screen.getByRole('textbox', { name: /^Fecha de nacimiento$/i })).toHaveValue('20/05/1994')
+    await user.selectOptions(screen.getByLabelText(/Experiencia previa/i), 'Sin experiencia')
+    await user.click(screen.getByLabelText(/Martes/i))
+    await user.type(screen.getByLabelText(/Motivación/i), 'Quiero aprender roller derby con constancia y trabajo en equipo.')
+    await user.click(screen.getByLabelText(/Acepto la/i))
+
+    await user.click(screen.getByRole('button', { name: /Abrir calendario de fecha de nacimiento/i }))
+    const dialog = screen.getByRole('dialog', { name: /Seleccionar fecha de nacimiento/i })
+    expect(within(dialog).getByRole('button', { name: /20/ }).closest('.rdp-day_selected')).not.toBeNull()
+
+    await user.click(screen.getByRole('button', { name: /Enviar postulación/i }))
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1))
+    const body = JSON.parse(String((fetch as ReturnType<typeof vi.fn>).mock.calls[0][1]?.body))
+    expect(body.birthDate).toBe('1994-05-20')
+  })
+
+  it('rejects impossible manual dates, future dates and minors', async () => {
+    const user = await goToForm()
+    const birthDate = screen.getByRole('textbox', { name: /^Fecha de nacimiento$/i })
+
+    await user.type(birthDate, '31022000')
+    expect(birthDate).toHaveValue('31/02/2000')
+    await user.click(screen.getByRole('button', { name: /Enviar postulación/i }))
+    expect(screen.getByText(/Ingresa una fecha de nacimiento válida/i)).toBeInTheDocument()
+
+    await user.clear(birthDate)
+    await user.type(birthDate, '01013000')
+    await user.click(screen.getByRole('button', { name: /Enviar postulación/i }))
+    expect(screen.getByText(/La fecha no puede estar en el futuro/i)).toBeInTheDocument()
+
+    await user.clear(birthDate)
+    await user.type(birthDate, '01012020')
+    await user.click(screen.getByRole('button', { name: /Enviar postulación/i }))
+    expect(screen.getByText(/Debes tener al menos 18 años/i)).toBeInTheDocument()
   })
 })
